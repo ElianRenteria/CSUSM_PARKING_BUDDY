@@ -5,6 +5,10 @@ import { View } from 'react-native';
 import MapView from 'react-native-maps';
 import NavigationBar from './NavigationBar';
 
+
+
+
+
 const MapScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>

@@ -1,24 +1,46 @@
 // NavigationBar.js
 
 import React from 'react';
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-//import NavBarBtn from './NavBarBtn';
+import { View, Text, TouchableOpacity, Dimensions,Geolocation } from 'react-native';
+import * as Location from 'expo-location';
 import { Button, Box, Center, NativeBaseProvider, HStack, colorMode} from "native-base"
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+async function getLocation() {
+  const { status } = await Location.requestForegroundPermissionsAsync(); // Request location permissions
+
+  if (status === 'granted') {
+    const location = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = location.coords;
+    
+    const region = {
+      latitude,
+      longitude,
+      latitudeDelta: 0.0043,
+      longitudeDelta: 0.0034
+    };
+
+    map.current.animateToRegion(region, 500);
+  } else {
+    // Handle permission denied or restricted case
+  }
+}
+
 
 function Example() {
   return (
       <HStack space = {4} alignItems="start" height={90} justifyContent={'center'} width={windowWidth-55}>
-        <Button height={75} width={75} onPress={() => console.log("home")}>home</Button>
+        <Button height={75} width={75} onPress={() => getLocation()}>home</Button>
         <Button height={75} width={75} onPress={() => console.log("tools")}>tools</Button>
         <Button height={75} width={75} onPress={() => console.log("carpool")}>carpool</Button>
         <Button height={75} width={75} onPress={() => console.log("parking")}>parking</Button>
       </HStack>
   )
 }
+
+
 
 
 const NavigationBar = ({ navigation }) => {

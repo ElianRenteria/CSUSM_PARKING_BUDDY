@@ -7,10 +7,13 @@ import { Menu } from 'native-base';
 import MapView from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 // App.js
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MapScreen from './MapScreen';
+
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -32,6 +35,10 @@ const App = () => {
     </NavigationContainer>
   );
 };
+
+
+
+
 
 export default App;
 //Now, when you navigate to the "Map" screen, you will see the navigation bar at the top of the map. You can customize the NavigationBar component to include buttons, titles, or any other navigation elements you need. Additionally, you can style it according to your project's design requirements.
