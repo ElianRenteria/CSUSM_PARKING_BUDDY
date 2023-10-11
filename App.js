@@ -1,41 +1,43 @@
-import React from "react";
-import { NativeBaseProvider, Box } from "native-base";
-import { Button } from "native-base";
-import { Center, Square, Circle } from 'native-base';
-import { Flex, Spacer } from "native-base";
-import { Menu } from 'native-base';
-import MapView from 'react-native-maps';
-import { StyleSheet, View } from 'react-native';
-// App.js
-
+import React from 'react';
+import { Ionicons } from '@expo/vector-icons'; // Use 'react-native-vector-icons/Ionicons' if you're not using Expo
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import MapScreen from './MapScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import NotificationsScreen from './screens/NotificationsScreen';
+import MapScreen from './screens/MapScreen';
+import PreferencesScreen from './screens/PreferencesScreen';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-const App = () => {
+function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Parking Buddy" component={MapScreen} options={{
-              headerStyle: {
-                backgroundColor: '#2d2d30', // Change the background color here
-              },
-              headerTintColor: 'white', // Change text color if needed
-              headerTitleStyle: {
-                fontWeight: 'bold', // You can adjust text style as well
-              },
-            }}/>
-        {/* Add more screens here */}
-      </Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'settings' : 'settings-outline';
+            } else if (route.name === 'Profile') {
+              iconName = focused ? 'person' : 'person-outline';
+            }
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'blue',
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Announcements" component={NotificationsScreen} />
+        <Tab.Screen name="Parking Map" component={MapScreen} />
+        <Tab.Screen name="Preferences" component={PreferencesScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
-};
+}
 
 export default App;
-//Now, when you navigate to the "Map" screen, you will see the navigation bar at the top of the map. You can customize the NavigationBar component to include buttons, titles, or any other navigation elements you need. Additionally, you can style it according to your project's design requirements.
-
-
-
-
