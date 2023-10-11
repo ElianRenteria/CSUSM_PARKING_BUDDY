@@ -16,6 +16,17 @@ function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
+            screenOptions={
+              "tabBarActiveTintColor": "blue",
+              "tabBarInactiveTintColor": "gray",
+              "tabBarStyle": [
+                {
+                  "display": "flex"
+                },
+                null
+              ]
+            }
+
             if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'Settings') {
@@ -27,10 +38,7 @@ function App() {
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'blue',
-          inactiveTintColor: 'gray',
-        }}
+        
       >
         <Tab.Screen name="Announcements" component={NotificationsScreen} />
         <Tab.Screen name="Parking Map" component={MapScreen} />
