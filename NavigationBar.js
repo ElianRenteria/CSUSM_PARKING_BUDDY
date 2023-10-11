@@ -21,7 +21,7 @@ async function getLocation() {
       latitudeDelta: 0.0043,
       longitudeDelta: 0.0034
     };
-
+    console.log(latitude, longitude)
     map.current.animateToRegion(region, 500);
   } else {
     // Handle permission denied or restricted case
