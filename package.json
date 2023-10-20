@@ -26,7 +26,9 @@
     "react-native-svg": "13.9.0",
     "react-native-web": "~0.19.6",
     "@expo/vector-icons": "^13.0.0",
-    "expo-system-ui": "~2.4.0"
+    "expo-system-ui": "~2.4.0",
+    "expo-location": "~16.1.0"
+
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

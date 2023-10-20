@@ -11,6 +11,31 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
+async function getLocation() {
+  const { status } = await Location.requestForegroundPermissionsAsync(); // Request location permissions
+
+  if (status === 'granted') {
+    const location = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = location.coords;
+    
+    const region = {
+      latitude,
+      longitude,
+      latitudeDelta: 0.0043,
+      longitudeDelta: 0.0034
+    };
+    console.log(latitude, longitude)
+    map.current.animateToRegion(region, 500);
+    return region;
+  } else {
+    // Handle permission denied or restricted case
+  }
+}
+
+
+
+
+
 function App() {
   return (
     <NavigationContainer>
@@ -60,7 +85,7 @@ function App() {
         
       >
         <Tab.Screen name="Announcements" component={NotificationsScreen} />
-        <Tab.Screen name="Parking Map" component={MapScreen} />
+        <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
         <Tab.Screen name="Preferences" component={PreferencesScreen} />
       </Tab.Navigator>
     </NavigationContainer>
