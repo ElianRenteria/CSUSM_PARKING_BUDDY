@@ -8,6 +8,7 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { DarkModeProvider } from './screens/DarkModeContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,57 +39,59 @@ async function getLocation() {
 
 function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <DarkModeProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-            screenOptions={
-              "tabBarActiveTintColor": "#007AC3",
-              "tabBarInactiveTintColor": "gray",
-              "tabBarStyle": [
-                {
-                  "display": "flex"
-                },
-                null
-              ]
+              screenOptions={
+                "tabBarActiveTintColor": "#007AC3",
+                "tabBarInactiveTintColor": "gray",
+                "tabBarStyle": [
+                  {
+                    "display": "flex"
+                  },
+                  null
+                ]
+                
+              }
+              /*if (route.name === 'Home') {
+                iconName = focused ? 'home' : 'home-outline';
+              } else if (route.name === 'Settings') {
+                iconName = focused ? 'settings' : 'settings-outline';
+              } else if (route.name === 'Profile') {
+                iconName = focused ? 'person' : 'person-outline';
+              }
+
+              return <Ionicons name={iconName} size={size} color={color} />;*/
+
+              if (route.name === 'Announcements') {
+                iconName = focused ? 'announcement' : 'announcement';
+                colorFocused = focused ? '#007AC3' : 'grey'
+                return <MaterialIcons name={iconName} size={24} color={colorFocused} />;
+              } else if (route.name === 'Preferences') {
+                iconName = focused ? 'account-cog-outline' : 'account-cog-outline';
+                colorFocused = focused ? '#007AC3' : 'grey'
+                return <MaterialCommunityIcons name={iconName} size={24} color={colorFocused} />;
+              } else if (route.name === 'Parking Map') {
+                iconName = focused ? 'map-o' : 'map-o';
+                colorFocused = focused ? '#007AC3' : 'grey'
+                return <FontAwesome name={iconName} size={24} color={colorFocused} />;
+              }
+
               
-            }
-            /*if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'settings' : 'settings-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;*/
-
-            if (route.name === 'Announcements') {
-              iconName = focused ? 'announcement' : 'announcement';
-              colorFocused = focused ? '#007AC3' : 'grey'
-              return <MaterialIcons name={iconName} size={24} color={colorFocused} />;
-            } else if (route.name === 'Preferences') {
-              iconName = focused ? 'account-cog-outline' : 'account-cog-outline';
-              colorFocused = focused ? '#007AC3' : 'grey'
-              return <MaterialCommunityIcons name={iconName} size={24} color={colorFocused} />;
-            } else if (route.name === 'Parking Map') {
-              iconName = focused ? 'map-o' : 'map-o';
-              colorFocused = focused ? '#007AC3' : 'grey'
-              return <FontAwesome name={iconName} size={24} color={colorFocused} />;
-            }
-
-            
-          },
-        })}
-        
-      >
-        <Tab.Screen name="Announcements" component={NotificationsScreen} />
-        <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
-        <Tab.Screen name="Preferences" component={PreferencesScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+            },
+          })}
+          
+        >
+          <Tab.Screen name="Announcements" component={NotificationsScreen} />
+          <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
+          <Tab.Screen name="Preferences" component={PreferencesScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </DarkModeProvider>
   );
 }
 
