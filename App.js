@@ -1,5 +1,6 @@
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons'; // Use 'react-native-vector-icons/Ionicons' if you're not using Expo
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NotificationsScreen from './screens/NotificationsScreen';
@@ -8,6 +9,46 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+Notifications.scheduleNotificationAsync({
+  content: {
+    title: 'CSUSM Parking Buddy',
+    body: "Did you Park?",
+  },
+  trigger: null,
+});
+
+
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+
+  if (finalStatus !== 'granted') {
+    alert('Failed to get push token for push notification!');
+    return;
+  }
+
+  token = (await Notifications.getExpoPushTokenAsync({projectId: '0e21ebb0-cf10-45be-9160-e657075d2e83'})).data;
+  return token;
+}
+
 
 const Tab = createBottomTabNavigator();
 
@@ -32,9 +73,7 @@ async function getLocation() {
   }
 }
 
-
-
-
+registerForPushNotificationsAsync()
 
 function App() {
   return (
@@ -55,15 +94,6 @@ function App() {
               ]
               
             }
-            /*if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'settings' : 'settings-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;*/
 
             if (route.name === 'Announcements') {
               iconName = focused ? 'announcement' : 'announcement';
