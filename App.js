@@ -5,6 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NotificationsScreen from './screens/NotificationsScreen';
 import MapScreen from './screens/MapScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
+import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +45,7 @@ function App() {
             let iconName;
 
             screenOptions={
-              "tabBarActiveTintColor": "blue",
+              "tabBarActiveTintColor": "#007AC3",
               "tabBarInactiveTintColor": "gray",
               "tabBarStyle": [
                 {
@@ -50,9 +53,9 @@ function App() {
                 },
                 null
               ]
+              
             }
-
-            if (route.name === 'Home') {
+            /*if (route.name === 'Home') {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'Settings') {
               iconName = focused ? 'settings' : 'settings-outline';
@@ -60,7 +63,23 @@ function App() {
               iconName = focused ? 'person' : 'person-outline';
             }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={size} color={color} />;*/
+
+            if (route.name === 'Announcements') {
+              iconName = focused ? 'announcement' : 'announcement';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <MaterialIcons name={iconName} size={24} color={colorFocused} />;
+            } else if (route.name === 'Preferences') {
+              iconName = focused ? 'account-cog-outline' : 'account-cog-outline';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <MaterialCommunityIcons name={iconName} size={24} color={colorFocused} />;
+            } else if (route.name === 'Parking Map') {
+              iconName = focused ? 'map-o' : 'map-o';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <FontAwesome name={iconName} size={24} color={colorFocused} />;
+            }
+
+            
           },
         })}
         
