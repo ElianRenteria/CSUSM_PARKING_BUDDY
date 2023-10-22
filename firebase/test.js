@@ -4,15 +4,22 @@ var serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://parkingbuddy-79e1c-default-rtdb.firebaseio.com"
+  databaseURL: "https://console.firebase.google.com/u/0/project/parkingbuddy-79e1c/firestore/data/~2FParking%20Structure~2FLot%20F"
 });
 
 // Access the database and perform operations
-const db = admin.database();
-const ref = db.ref("/"); // Replace 'your_database_path' with the actual path in your database
-
+const db = admin.firestore();
 // Example of reading data
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-  admin.app().delete(); // Cleanup - optional
-});
+const docRef = db.collection('Users').doc('Mark R');
+
+docRef.get()
+  .then((doc) => {
+    if (doc.exists) {
+      console.log('Document data:', doc.data());
+    } else {
+      console.log('No such document!');
+    }
+  })
+  .catch((error) => {
+    console.log('Error getting document:', error);
+  });
