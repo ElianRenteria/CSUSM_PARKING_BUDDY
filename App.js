@@ -11,6 +11,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import UserReportScreen from './screens/UserReportScreen.jsx';
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -117,7 +119,9 @@ function App() {
         <Tab.Screen name="Announcements" component={NotificationsScreen} />
         <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
         <Tab.Screen name="Preferences" component={PreferencesScreen} />
-      </Tab.Navigator>
+        <Tab.Screen name="Parking Map" component={MapScreen} />
+        <Tab.Screen name="Reports" component={UserReportScreen} />
+        </Tab.Navigator>
     </NavigationContainer>
   );
 }
