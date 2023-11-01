@@ -1,13 +1,13 @@
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons'; // Use 'react-native-vector-icons/Ionicons' if you're not using Expo
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, Button, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import NotificationsScreen from './src/screens/NotificationsScreen';
-import MapScreen from './src/screens/MapScreen';
-import PreferencesScreen from './src/screens/PreferencesScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
+import MapScreen from './screens/MapScreen';
+import PreferencesScreen from './screens/PreferencesScreen';
 
 const Tab = createBottomTabNavigator();
-
 
 function App() {
   return (
@@ -17,20 +17,37 @@ function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'settings' : 'settings-outline';
-            } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
+            screenOptions={
+              "tabBarActiveTintColor": "blue",
+              "tabBarInactiveTintColor": "gray",
+              "tabBarStyle": [
+                {
+                  "display": "flex"
+                },
+                null
+              ]
             }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            if (route.name === 'Announcements') {
+              iconName = focused ? 'announcement' : 'announcement';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <MaterialIcons name={iconName} size={24} color={colorFocused} />;
+            } else if (route.name === 'Preferences') {
+              iconName = focused ? 'account-cog-outline' : 'account-cog-outline';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <MaterialCommunityIcons name={iconName} size={24} color={colorFocused} />;
+            } else if (route.name === 'Parking Map') {
+              iconName = focused ? 'map-o' : 'map-o';
+              colorFocused = focused ? '#007AC3' : 'grey'
+              return <FontAwesome name={iconName} size={24} color={colorFocused} />;
+            }
+
+            
           },
         })}
       >
         <Tab.Screen name="Announcements" component={NotificationsScreen} />
-        <Tab.Screen name="Parking Map" component={MapScreen} />
+        <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
         <Tab.Screen name="Preferences" component={PreferencesScreen} />
       </Tab.Navigator>
     </NavigationContainer>
