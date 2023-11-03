@@ -1,40 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Switch, StyleSheet, useColorScheme } from 'react-native';
 
 const PreferencesScreen = () => {
-  const colorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState('light');
   const [isWorking, setIsWorking] = useState(true);
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+    if (isEnabled) {
+      setIsWorking(true);
+      setColorScheme('dark');
+    } else {
+      setIsWorking(false);
+      setColorScheme('light');
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: colorScheme === 'dark' ? '#000000' : '#ffffff',
+      alignItems: 'center',
+      backgroundColor: colorScheme === 'dark' ? '#282828' : 'white',
     },
     text: {
-      color: colorScheme === 'dark' ? '#ffffff' : '#000000',
+      color: colorScheme === 'dark' ? 'white' : '#282828',
     },
   });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Dark Mode {isWorking ? 'not working' : '10% working'}</Text>
+      <Text style={styles.text}>{isWorking ? 'Dark Mode' : 'Light Mode'}</Text>
       <Switch
-        trackColor={{ false: '#81b0ff', true: '#007AC3' }}
-        thumbColor={'#f4f3f4'}
+        trackColor={{ false: '#767577', true: '#81b0ff' }}
+        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+        ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
         value={isEnabled}
-        onChange={() => {
-          if (isEnabled == true) setIsWorking(true);
-          else if (isEnabled == false) setIsWorking(false);
-        }}
       />
     </View>
   );
 };
 
 export default PreferencesScreen;
-
