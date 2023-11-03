@@ -147,7 +147,11 @@ const onMarkerPressed = (location, index) => {
   const renderCarouselItem = ({ item }) => (
     <View style={styles.cardContainer}>
       <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text>Free Spaces: {item.freeSpaces}</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.cardText}>Free Spaces: </Text>
+        <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
+      </View>
+      <Text style={styles.cardText}>Total Spaces: {item.freeSpaces}</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Select Lot"
@@ -209,6 +213,10 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   cardContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     height: 200,
     width: 300,
@@ -232,13 +240,11 @@ const styles = StyleSheet.create({
     color: 'white',
     position: 'absolute',
     fontWeight: 'bold',
-    top: '50%', // Position the heading at the vertical center of the cardContainer
+    top: '83.5%', // Position the heading at the vertical center of the cardContainer
     left: '50%', // Position the heading at the horizontal center of the cardContainer
     transform: [{ translateX: -80 }, { translateY: 65 }], // Center the heading precisely
     padding: 12, // Add some padding for better visibility
     backgroundColor: 'rgba(0, 0, 0, 0.6)', // Match the background of the container
-    borderTopLeftRadius: 24, // Match the border radius of the cardContainer
-    borderTopRightRadius: 24,
   },
   buttonContainer: {
     justifyContent: 'flex-end', // Vertically align to the bottom
@@ -246,12 +252,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', // White background color
     height: 40,
     width: 100,
+    borderRadius: 12,
+    left: '31%', // Position the button at the horizontal center of the cardContainer
   },
   selectLot:{
     color: 'red',
     position:'abolute',
     bottom: '0',
     backgroundColor: 'white'
+  },
+  cardText:{
+    color: 'white',
+    fontSize: 16,
+  },
+  freeSpacesValue:{
+    color: '#90EE90',
+    fontSize: 16,
   }
 
 
