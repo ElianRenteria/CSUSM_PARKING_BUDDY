@@ -12,6 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { useColorScheme } from 'react-native';
+import { ColorSchemeProvider } from './screens/ColorSchemeContext';
 
 
 Notifications.setNotificationHandler({
@@ -99,7 +100,7 @@ function App() {
 
   return (
     <NavigationContainer>
-      <View style={styles.container}>
+      <ColorSchemeProvider>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -110,7 +111,7 @@ function App() {
                 "tabBarInactiveTintColor": "gray",
                 "tabBarStyle": [
                   {
-                    "display": "flex"
+                    "display": "flex",
                   },
                   null
                 ]
@@ -140,7 +141,7 @@ function App() {
           <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
           <Tab.Screen name="Preferences" component={PreferencesScreen} />
         </Tab.Navigator>
-      </View>
+      </ColorSchemeProvider>
     </NavigationContainer>
   );
 }
