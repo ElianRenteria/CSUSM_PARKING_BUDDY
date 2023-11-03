@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,6 +13,11 @@ import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel'; //npm install --save react-native-snap-carousel
 import firebase from '../firebase/firebaseConfig';
+import { useColorScheme } from 'react-native';
+import { ColorSchemeContext } from './ColorSchemeContext';
+
+
+
 
 const sanmarcos = {
   latitude: 33.1298,
@@ -40,6 +45,7 @@ const csusmCoord = {
 };
 
 const MapScreen = () => {
+  const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
 
@@ -171,6 +177,8 @@ const onMarkerPressed = (location, index) => {
         style={{ flex: 1 }}
         initialRegion={sanmarcos}
         ref={mapRef}
+        mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
+        //types = standard, satellite, hybrid, terrain, mutedStandard
       >
         <Text style={styles.heading}>Select a parking Area</Text>
         {combinedData.map((marker, index) => (
