@@ -10,6 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
+import UserReportScreen from './screens/UserReportScreen';
 import * as Device from 'expo-device';
 
 Notifications.setNotificationHandler({
@@ -107,6 +108,10 @@ function App() {
               iconName = focused ? 'map-o' : 'map-o';
               colorFocused = focused ? '#007AC3' : 'grey'
               return <FontAwesome name={iconName} size={24} color={colorFocused} />;
+            } else if (route.name === 'Reports') {
+                iconName = focused ? 'map-o' : 'map-o';
+                colorFocused = focused ? '#007AC3' : 'grey'
+                return <FontAwesome name={iconName} size={24} color={colorFocused} />;
             }
 
             
@@ -117,6 +122,7 @@ function App() {
         <Tab.Screen name="Announcements" component={NotificationsScreen} />
         <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()}/>
         <Tab.Screen name="Preferences" component={PreferencesScreen} />
+        <Tab.Screen name="Reports" component={UserReportScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

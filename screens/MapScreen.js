@@ -34,6 +34,7 @@ const csusmCoord = {
 };
 
 const MapScreen = () => {
+    console.log('Map Screend rendered');
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
 
@@ -69,7 +70,7 @@ const MapScreen = () => {
 
     getLocation();
   }, []);
-
+    
   useEffect(() => {
     // Reference to the "Parking Spaces" collection
     const parkingRef = firebase.firestore().collection('Parking Structure');
