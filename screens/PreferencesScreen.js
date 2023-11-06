@@ -1,8 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+
 
 const PreferencesScreen = () => {
   const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
@@ -29,6 +31,13 @@ const PreferencesScreen = () => {
       alignItems: 'center',
     },
   });
+
+
+  useEffect(() => {
+    const newColorScheme = isToggled ? 'dark' : 'light';
+    setColorScheme(newColorScheme);
+  }, [isToggled, setColorScheme]);
+
 
   return (
     <View style={styles.container}>

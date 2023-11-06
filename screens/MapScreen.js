@@ -158,8 +158,9 @@ const onMarkerPressed = (location, index) => {
         <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
       </View>
       <Text style={styles.cardText}>Total Spaces: {item.freeSpaces}</Text>
-      <View style={styles.buttonContainer}>
+      <View style={[styles.buttonContainer, { backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF' }]}>
         <Button
+        color={colorScheme === 'dark' ? '#66afff' : ''}
           title="Select Lot"
           style={styles.selectLot}
           onPress={() => Alert.alert("Button pressed")}
@@ -168,6 +169,7 @@ const onMarkerPressed = (location, index) => {
       <Image style={styles.cardImage} />
     </View>
   );
+
 
   //console.log('Combined Data:', combinedData)
 
@@ -257,7 +259,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'flex-end', // Vertically align to the bottom
     alignItems: 'center', // Horizontally align to the center
-    backgroundColor: 'white', // White background color
     height: 40,
     width: 100,
     borderRadius: 12,
@@ -267,7 +268,7 @@ const styles = StyleSheet.create({
     color: 'red',
     position:'abolute',
     bottom: '0',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   cardText:{
     color: 'white',

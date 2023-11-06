@@ -15,8 +15,8 @@ const NotificationsScreen = () => {
     text: {
       color: colorScheme === 'dark' ? 'white' : '#282828',
     },
-  });
-
+  }
+  );
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Notifications Screen</Text>
