@@ -9,51 +9,6 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
-import { useColorScheme } from 'react-native';
-import { ColorSchemeProvider } from './screens/ColorSchemeContext';
-import { ColorSchemeContext } from './screens/ColorSchemeContext';
-
-
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
-Notifications.scheduleNotificationAsync({
-  content: {
-    title: 'CSUSM Parking Buddy',
-    body: "Did you Park?",
-  },
-  trigger: null,
-});
-
-
-
-async function registerForPushNotificationsAsync() {
-  let token;
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
-
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
-  }
-
-  if (finalStatus !== 'granted') {
-    alert('Failed to get push token for push notification!');
-    return;
-  }
-
-  token = (await Notifications.getExpoPushTokenAsync({projectId: '0e21ebb0-cf10-45be-9160-e657075d2e83'})).data;
-  return token;
-}
-
 
 const Tab = createBottomTabNavigator();
 
@@ -77,8 +32,6 @@ async function getLocation() {
     // Handle permission denied or restricted case
   }
 }
-
-registerForPushNotificationsAsync()
 
 function App() {
   const [navBarRefresh, setNavBarRefresh] = useState(false);
