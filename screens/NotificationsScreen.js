@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import NotificationHistory from '../NotificationHistory';
 import AnnouncementCard from '../AnnouncementCard';
+import { useColorScheme } from 'react-native';
+import { ColorSchemeContext } from './ColorSchemeContext';
 
 const NotificationsScreen = () => {
+  /*const { colorScheme } = useContext(ColorSchemeContext);
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colorScheme === 'dark' ? '#282828' : 'white',
+    },
+    text: {
+        color: colorScheme === 'dark' ? 'white' : '#282828',
+    },
+  });*/
   const [isHistoryVisible, setHistoryVisible] = useState(false);
   const notifications = [
 

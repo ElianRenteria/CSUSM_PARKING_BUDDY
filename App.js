@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef, useContext} from 'react';
-import { Text, View, Button, Platform, StyleSheet,colorScheme} from 'react-native';
+import { Text, View, Button, Platform, StyleSheet,colorScheme, useColorScheme} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NotificationsScreen from './screens/NotificationsScreen';
@@ -9,6 +9,8 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+ import { ColorSchemeProvider } from './screens/ColorSchemeContext';
+ import { ColorSchemeContext } from './screens/ColorSchemeContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +37,7 @@ async function getLocation() {
 
 function App() {
   const [navBarRefresh, setNavBarRefresh] = useState(false);
-  const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
+  //const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
 
   useEffect(() => {
     setNavBarRefresh(!navBarRefresh);
