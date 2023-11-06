@@ -10,12 +10,12 @@ admin.initializeApp({
 // Access the database and perform operations
 const db = admin.firestore();
 // Example of reading data
-const docRef = db.collection('Users').doc('Mark R');
+const docRef = db.collection('Parking Structure').doc('Lot XYZ'); 
 
 docRef.get()
   .then((doc) => {
     if (doc.exists) {
-      console.log('Document data:', doc.data());
+      console.log('Document data:', doc.data()['OccupationCurrent']);
     } else {
       console.log('No such document!');
     }
@@ -23,3 +23,4 @@ docRef.get()
   .catch((error) => {
     console.log('Error getting document:', error);
   });
+
