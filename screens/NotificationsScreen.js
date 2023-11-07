@@ -5,6 +5,7 @@ import NotificationHistory from '../NotificationHistory';
 import AnnouncementCard from '../AnnouncementCard';
 import { useColorScheme } from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
+import Table from '../components/DataTable.js';
 
 const NotificationsScreen = () => {
   /*const { colorScheme } = useContext(ColorSchemeContext);
@@ -82,6 +83,7 @@ const NotificationsScreen = () => {
             imageUrl={announcement.imageUrl}
           />
         ))}
+        <Table />
       </ScrollView>
 
       <NotificationHistory
