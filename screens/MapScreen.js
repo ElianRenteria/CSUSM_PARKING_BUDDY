@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,6 +13,11 @@ import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel'; //npm install --save react-native-snap-carousel
 import firebase from '../firebase/firebaseConfig';
+import { useColorScheme } from 'react-native';
+import { ColorSchemeContext } from './ColorSchemeContext';
+
+
+
 
 const sanmarcos = {
   latitude: 33.1298,
@@ -24,16 +29,23 @@ const sanmarcos = {
 const csusmCoord = {
   markers: [],
   coordinates: [
-    { name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886 },
-    { name: "Lot N", latitude: 33.132603715329026, longitude: -117.15658318361112 },
-    { name: "Lot F", latitude: 33.12639302136077, longitude: -117.15689431991596 },
-    { name: "Lot C", latitude: 33.12661540098678, longitude: -117.16106783721526 },
-    { name: "Lot XYZ", latitude: 33.12828710963282, longitude: -117.16440434858764 },
-    { name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065 },
+    { name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
+    longitudeDelta: 0.00104},
+    { name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,      
+    longitudeDelta: 0.0009},
+    { name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,      
+    longitudeDelta: 0.0035 },
+    { name: "Lot C", latitude: 33.12640540098678, longitude: -117.16106783721526, latitudeDelta: 0.0018,      
+    longitudeDelta: 0.002 },
+    { name: "Lot XYZ", latitude: 33.12818710963282, longitude: -117.16400434858764, latitudeDelta: 0.003,      
+    longitudeDelta: 0.0024 },
+    { name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,      
+    longitudeDelta: 0.0019 },
   ],
 };
 
 const MapScreen = () => {
+  const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
 
@@ -99,43 +111,56 @@ const MapScreen = () => {
   });
   
 
-  // Animate to the next marker when the carousel changes
-  const onCarouselItemChange = (index) => {
-    let location = combinedData[index];
+// Animate to the next marker when the carousel changes
+const onCarouselItemChange = (index) => {
+  let location = combinedData[index];
 
-    if (location.latitude !== 0 && location.longitude !== 0) {
-      mapRef.current.animateToRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.09,
-        longitudeDelta: 0.035,
-      });
+  if (location.latitude !== -1 && location.longitude !== -1) {
+    
+    mapRef.current.animateToRegion({
+      latitude: location.latitude-.0004,
+      longitude: location.longitude,
+      latitudeDelta: location.latitudeDelta,      
+      longitudeDelta: location.longitudeDelta,
+    });
 
-      // Show the callout marker of the coordinate after animating to the region
-      csusmCoord.markers[index]?.showCallout();
-    }
-  };
+    // Show the callout marker of the coordinate after animating to the region
+    //csusmCoord.markers[index]?.showCallout();
+  }
+};
 
-  // Animate the screen to the next
-  const onMarkerPressed = (location, index) => {
-    if (location.latitude !== 0 && location.longitude !== 0) {
-      mapRef.current.animateToRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        
-      });
+// Animate the screen to the next
+const onMarkerPressed = (location, index) => {
+  if (location.latitude !== 0 && location.longitude !== 0) {
+    mapRef.current.animateToRegion({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      
+    });
 
-      this._carousel.snapToItem(index);
-    }
-  };
+    this._carousel.snapToItem(index);
+  }
+};
+
+
+
+
+
+
+
 
   // Rendering parking cards
   const renderCarouselItem = ({ item }) => (
     <View style={styles.cardContainer}>
       <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text>Free Spaces: {item.freeSpaces}</Text>
-      <View style={styles.buttonContainer}>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.cardText}>Free Spaces: </Text>
+        <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
+      </View>
+      <Text style={styles.cardText}>Total Spaces: {item.freeSpaces}</Text>
+      <View style={[styles.buttonContainer, { backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF' }]}>
         <Button
+        color={colorScheme === 'dark' ? '#66afff' : ''}
           title="Select Lot"
           style={styles.selectLot}
           onPress={() => Alert.alert("Button pressed")}
@@ -145,7 +170,8 @@ const MapScreen = () => {
     </View>
   );
 
-  console.log('Combined Data:', combinedData)
+
+  //console.log('Combined Data:', combinedData)
 
   return (
     <View style={{ flex: 1 }}>
@@ -153,6 +179,8 @@ const MapScreen = () => {
         style={{ flex: 1 }}
         initialRegion={sanmarcos}
         ref={mapRef}
+        mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
+        //types = standard, satellite, hybrid, terrain, mutedStandard
       >
         <Text style={styles.heading}>Select a parking Area</Text>
         {combinedData.map((marker, index) => (
@@ -195,6 +223,10 @@ const styles = StyleSheet.create({
     marginBottom: 48,
   },
   cardContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     height: 200,
     width: 300,
@@ -218,26 +250,33 @@ const styles = StyleSheet.create({
     color: 'white',
     position: 'absolute',
     fontWeight: 'bold',
-    top: '50%', // Position the heading at the vertical center of the cardContainer
+    top: '83.5%', // Position the heading at the vertical center of the cardContainer
     left: '50%', // Position the heading at the horizontal center of the cardContainer
     transform: [{ translateX: -80 }, { translateY: 65 }], // Center the heading precisely
     padding: 12, // Add some padding for better visibility
     backgroundColor: 'rgba(0, 0, 0, 0.6)', // Match the background of the container
-    borderTopLeftRadius: 24, // Match the border radius of the cardContainer
-    borderTopRightRadius: 24,
   },
   buttonContainer: {
     justifyContent: 'flex-end', // Vertically align to the bottom
     alignItems: 'center', // Horizontally align to the center
-    backgroundColor: 'white', // White background color
     height: 40,
     width: 100,
+    borderRadius: 12,
+    left: '31%', // Position the button at the horizontal center of the cardContainer
   },
   selectLot:{
     color: 'red',
     position:'abolute',
     bottom: '0',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+  },
+  cardText:{
+    color: 'white',
+    fontSize: 16,
+  },
+  freeSpacesValue:{
+    color: '#90EE90',
+    fontSize: 16,
   }
 
 
