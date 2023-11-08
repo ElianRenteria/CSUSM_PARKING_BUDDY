@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native'; 
 import { DataTable } from 'react-native-paper'; 
 import firebase from '../firebase/firebaseConfig';
