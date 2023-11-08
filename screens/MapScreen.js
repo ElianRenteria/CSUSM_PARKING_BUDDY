@@ -41,6 +41,12 @@ const csusmCoord = {
     longitudeDelta: 0.0024 },
     { name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,      
     longitudeDelta: 0.0019 },
+    /*{ name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: , longitudeDelta},
+    { name: "Lot K", latitude: , longitude, latitudeDelta: , longitudeDelta:},
+    { name: "Lot W", latitude: , longitude, latitudeDelta, longitudeDelta},
+    { name: "Lot L", latitude: , longitude, latitudeDelta, longitudeDelta},
+    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta, longitudeDelta}*/
+
   ],
 };
 
@@ -48,6 +54,8 @@ const MapScreen = () => {
   const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
+
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
 
   const mapRef = useRef(null);
 
@@ -91,8 +99,9 @@ const MapScreen = () => {
       const data = [];
       querySnapshot.forEach((doc) => {
         // Access the "Free Spaces" field
-        const freeSpaces = doc.data().FreeSpaces;
-        data.push({ id: doc.id, freeSpaces});
+        const freeSpaces = doc.data().OccupationCurrent;
+        const totalSpaces = doc.data().TotalSpaces
+        data.push({ id: doc.id, freeSpaces, totalSpaces});
       });
       // Set the retrieved data in the state
       setParkingData(data);
@@ -142,33 +151,34 @@ const onMarkerPressed = (location, index) => {
   }
 };
 
-
-
-
-
-
-
-
-  // Rendering parking cards
-  const renderCarouselItem = ({ item }) => (
-    <View style={styles.cardContainer}>
+const renderCarouselItem = ({ item }) => {
+  return (
+    <View style={[styles.cardContainer, isCardExpanded ? styles.expandedCard : null]}>
       <Text style={styles.cardTitle}>{item.name}</Text>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.cardText}>Free Spaces: </Text>
         <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
       </View>
-      <Text style={styles.cardText}>Total Spaces: {item.freeSpaces}</Text>
-      <View style={[styles.buttonContainer, { backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF' }]}>
-        <Button
-        color={colorScheme === 'dark' ? '#66afff' : ''}
-          title="Select Lot"
-          style={styles.selectLot}
-          onPress={() => Alert.alert("Button pressed")}
-        />
-      </View>
-      <Image style={styles.cardImage} />
+      <Text style={styles.cardText}>Total Spaces: {item.totalSpaces}</Text>
+      {/*When the card is expanded, add more info*/}
+      {isCardExpanded && (
+        <View>
+          <Text style = {styles.cardText}>Additional Information:</Text>
+          <Text style = {styles.cardText}>More details about the parking lot can be shown here.</Text>
+          <Text style = {styles.cardText}>Include any other relevant information you want to display.</Text>
+        </View>
+      )}
+      {/*Set isCardExpanded when clicked to either expand or shrink*/}
+      <Button
+      title = "card view"
+      onPress={() => setIsCardExpanded(!isCardExpanded)}
+      />
+          {/* Additional information displayed when the card is expanded */}
     </View>
   );
+};
+
+
 
 
   //console.log('Combined Data:', combinedData)
@@ -182,7 +192,6 @@ const onMarkerPressed = (location, index) => {
         mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
         //types = standard, satellite, hybrid, terrain, mutedStandard
       >
-        <Text style={styles.heading}>Select a parking Area</Text>
         {combinedData.map((marker, index) => (
           <Marker
             key={marker.name}
@@ -219,7 +228,7 @@ const styles = StyleSheet.create({
   },
   carousel: {
     position: 'absolute',
-    bottom: 0,
+    bottom: -30,
     marginBottom: 48,
   },
   cardContainer: {
@@ -277,7 +286,10 @@ const styles = StyleSheet.create({
   freeSpacesValue:{
     color: '#90EE90',
     fontSize: 16,
-  }
+  },
+   expandedCard: {
+    height: 300, // You can adjust the height as needed
+  },
 
 
 });
