@@ -41,11 +41,11 @@ const csusmCoord = {
     longitudeDelta: 0.0024 },
     { name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,      
     longitudeDelta: 0.0019 },
-    { name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: , longitudeDelta},
+    /*{ name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: , longitudeDelta},
     { name: "Lot K", latitude: , longitude, latitudeDelta: , longitudeDelta:},
     { name: "Lot W", latitude: , longitude, latitudeDelta, longitudeDelta},
     { name: "Lot L", latitude: , longitude, latitudeDelta, longitudeDelta},
-    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta, longitudeDelta}
+    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta, longitudeDelta}*/
 
   ],
 };
