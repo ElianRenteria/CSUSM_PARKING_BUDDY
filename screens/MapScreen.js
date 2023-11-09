@@ -100,8 +100,13 @@ const MapScreen = () => {
       querySnapshot.forEach((doc) => {
         // Access the "Free Spaces" field
         const freeSpaces = doc.data().OccupationCurrent;
-        const totalSpaces = doc.data().TotalSpaces
-        data.push({ id: doc.id, freeSpaces, totalSpaces});
+        const totalSpaces = doc.data().TotalSpaces;
+        const motorcycles = doc.data().Motorcycle;
+        const disabledSpaces = doc.data().Disabled;
+        const payStation = doc.data().Paystation;
+        const faculty = doc.data().Faculty_Staff;
+
+        data.push({ id: doc.id, freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty});
       });
       // Set the retrieved data in the state
       setParkingData(data);
@@ -163,9 +168,10 @@ const renderCarouselItem = ({ item }) => {
       {/*When the card is expanded, add more info*/}
       {isCardExpanded && (
         <View>
-          <Text style = {styles.cardText}>Additional Information:</Text>
-          <Text style = {styles.cardText}>More details about the parking lot can be shown here.</Text>
-          <Text style = {styles.cardText}>Include any other relevant information you want to display.</Text>
+          <Text style = {styles.cardText}>Total disabled parking spots: {item.disabledSpaces ? item.disabledSpaces : 0} </Text>
+          <Text style = {styles.cardText}>Total motorcycle parking spots: {item.motorcycles ? item.motorcycles : 0 }</Text>
+          <Text style = {styles.cardText}>Total parking spots exclusively for faculty/staff: {item.faculty ? item.faculty : 0 }</Text>
+          <Text style = {styles.cardText}>Is there a paystation: {item.payStation ? 'Yes' : 'No'}</Text>
         </View>
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
