@@ -10,6 +10,10 @@ OccupancyKMax = 178;
 OccupancyXYZMax = 816;
 OccupancyPS1Max = 1419;
 
+// Reference to the "Parking Spaces" collection
+const parkingRef = firebase.firestore().collection('Parking Structure');
+//determine the color for the table row
+
 colorPick = (OccCurrent, OccMax) => {  
   
   if ((OccCurrent/OccMax) <= 0.33){
@@ -30,14 +34,30 @@ const Table = () => {
 
 const [parkingData, setParkingData] = useState([]);
 
+//find the data in the array that matches the lot
 const findParkingDataById = (documentId) => {
+
   const parkingDataItem = parkingData.find((item) => item.id === documentId);
+
   return parkingDataItem ? parkingDataItem.occupation : null;
 };
 
+updateFirebase = (Lot) => {
+
+  parkingRef.doc(Lot).get()
+  .then(doc => {
+    const currentValue = doc.data().OccupationCurrent; //Get the current value so you can change it
+    // Add 1 to the current value and update it in Firebase
+    parkingRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
+  })
+  .catch(error => {
+    console.error('This is the error while fetching:', error);
+  });
+
+}
+  
+
 useEffect(() => {
-  // Reference to the "Parking Spaces" collection
-  const parkingRef = firebase.firestore().collection('Parking Structure');
 
   // Fetch the data
   parkingRef.get().then((querySnapshot) => {
@@ -55,13 +75,13 @@ useEffect(() => {
 }, []);
 
   
-  return ( 
+  return ( //implement the table itself
     <DataTable style={styles.container}> 
       <DataTable.Header style={styles.tableHeader}> 
         <DataTable.Title>Parking Lot</DataTable.Title> 
         <DataTable.Title>Occupancy</DataTable.Title> 
         <DataTable.Title></DataTable.Title> 
-      </DataTable.Header> 
+      </DataTable.Header>  
       <DataTable.Row style={styles.row}> 
         <DataTable.Cell>Lot B</DataTable.Cell> 
         <DataTable.Cell>{findParkingDataById('Lot B')}/{OccupancyBMax}</DataTable.Cell> 
