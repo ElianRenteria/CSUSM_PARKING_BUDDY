@@ -29,28 +29,40 @@ const sanmarcos = {
 const csusmCoord = {
   markers: [],
   coordinates: [
-    { name: "Lot XYZ", latitude: 33.12818710963282, longitude: -117.16400434858764, latitudeDelta: 0.003,      
-    longitudeDelta: 0.0024 },
-    { name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,      
-    longitudeDelta: 0.0019 },
-    { name: "Lot C", latitude: 33.12640540098678, longitude: -117.16106783721526, latitudeDelta: 0.0018,      
-    longitudeDelta: 0.002 },
-    { name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,      
-    longitudeDelta: 0.0035 },
-    { name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
-    longitudeDelta: 0.00104},
-    { name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,      
-    longitudeDelta: 0.0009},
-    { name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta:.002 , longitudeDelta:.001},
-    { name: "Lot K", latitude:33.134066562234 , longitude: -117.15528486384052+.0001, latitudeDelta: .002 , longitudeDelta:.0001},
-    { name: "Lot O", latitude: 33.13277732264146, longitude: -117.15819923081247+.00001, latitudeDelta:.002, longitudeDelta:.0001},
-    { name: "Lot L", latitude: 33.13225349810222, longitude: -117.15945690471221, latitudeDelta:.002, longitudeDelta:.00001},
-    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta:.002, longitudeDelta:.00005},
+    {
+      name: "Lot XYZ", latitude: 33.12818710963282, longitude: -117.16400434858764, latitudeDelta: 0.003,
+      longitudeDelta: 0.0024
+    },
+    {
+      name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,
+      longitudeDelta: 0.0019
+    },
+    {
+      name: "Lot C", latitude: 33.12640540098678, longitude: -117.16106783721526, latitudeDelta: 0.0018,
+      longitudeDelta: 0.002
+    },
+    {
+      name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,
+      longitudeDelta: 0.0035
+    },
+    {
+      name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,
+      longitudeDelta: 0.00104
+    },
+    {
+      name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,
+      longitudeDelta: 0.0009
+    },
+    { name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: .002, longitudeDelta: .001 },
+    { name: "Lot K", latitude: 33.134066562234, longitude: -117.15528486384052 + .0001, latitudeDelta: .002, longitudeDelta: .0001 },
+    { name: "Lot O", latitude: 33.13277732264146, longitude: -117.15819923081247 + .00001, latitudeDelta: .002, longitudeDelta: .0001 },
+    { name: "Lot L", latitude: 33.13225349810222, longitude: -117.15945690471221, latitudeDelta: .002, longitudeDelta: .00001 },
+    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta: .002, longitudeDelta: .00005 },
 
   ],
 };
 
-const MapScreen = () => {
+const ParkingMapScreen = () => {
   const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
@@ -101,7 +113,7 @@ const MapScreen = () => {
         // Access the "Free Spaces" field
         const freeSpaces = doc.data().OccupationCurrent;
         const totalSpaces = doc.data().TotalSpaces
-        data.push({ id: doc.id, freeSpaces, totalSpaces});
+        data.push({ id: doc.id, freeSpaces, totalSpaces });
       });
       // Set the retrieved data in the state
       setParkingData(data);
@@ -118,66 +130,66 @@ const MapScreen = () => {
       ...parkingDataItem,
     };
   });
-  
 
-// Animate to the next marker when the carousel changes
-const onCarouselItemChange = (index) => {
-  let location = combinedData[index];
 
-  if (location.latitude !== -1 && location.longitude !== -1) {
-    
-    mapRef.current.animateToRegion({
-      latitude: location.latitude-.0004,
-      longitude: location.longitude,
-      latitudeDelta: location.latitudeDelta,      
-      longitudeDelta: location.longitudeDelta,
-    });
+  // Animate to the next marker when the carousel changes
+  const onCarouselItemChange = (index) => {
+    let location = combinedData[index];
 
-    // Show the callout marker of the coordinate after animating to the region
-    //csusmCoord.markers[index]?.showCallout();
-  }
-};
+    if (location.latitude !== -1 && location.longitude !== -1) {
 
-// Animate the screen to the next
-const onMarkerPressed = (location, index) => {
-  if (location.latitude !== 0 && location.longitude !== 0) {
-    mapRef.current.animateToRegion({
-      latitude: location.latitude,
-      longitude: location.longitude,
-      
-    });
+      mapRef.current.animateToRegion({
+        latitude: location.latitude - .0004,
+        longitude: location.longitude,
+        latitudeDelta: location.latitudeDelta,
+        longitudeDelta: location.longitudeDelta,
+      });
 
-    this._carousel.snapToItem(index);
-  }
-};
+      // Show the callout marker of the coordinate after animating to the region
+      //csusmCoord.markers[index]?.showCallout();
+    }
+  };
 
-const renderCarouselItem = ({ item }) => {
-  return (
-    <View style={[styles.cardContainer, isCardExpanded ? styles.expandedCard : null]}>
-      <Text style={styles.cardTitle}>{item.name}</Text>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.cardText}>Free Spaces: </Text>
-        <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
-      </View>
-      <Text style={styles.cardText}>Total Spaces: {item.totalSpaces}</Text>
-      {/*When the card is expanded, add more info*/}
-      {isCardExpanded && (
-        <View>
-          <Text style = {styles.cardText}>Additional Information:</Text>
-          <Text style = {styles.cardText}>More details about the parking lot can be shown here.</Text>
-          <Text style = {styles.cardText}>Include any other relevant information you want to display.</Text>
+  // Animate the screen to the next
+  const onMarkerPressed = (location, index) => {
+    if (location.latitude !== 0 && location.longitude !== 0) {
+      mapRef.current.animateToRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+
+      });
+
+      this._carousel.snapToItem(index);
+    }
+  };
+
+  const renderCarouselItem = ({ item }) => {
+    return (
+      <View style={[styles.cardContainer, isCardExpanded ? styles.expandedCard : null]}>
+        <Text style={styles.cardTitle}>{item.name}</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.cardText}>Free Spaces: </Text>
+          <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
         </View>
-      )}
-      {/*Set isCardExpanded when clicked to either expand or shrink*/}
-      <Button
-      title = "More Info"
-      color={'#69c8ff'}
-      onPress={() => setIsCardExpanded(!isCardExpanded)}
-      />
-          {/* Additional information displayed when the card is expanded */}
-    </View>
-  );
-};
+        <Text style={styles.cardText}>Total Spaces: {item.totalSpaces}</Text>
+        {/*When the card is expanded, add more info*/}
+        {isCardExpanded && (
+          <View>
+            <Text style={styles.cardText}>Additional Information:</Text>
+            <Text style={styles.cardText}>More details about the parking lot can be shown here.</Text>
+            <Text style={styles.cardText}>Include any other relevant information you want to display.</Text>
+          </View>
+        )}
+        {/*Set isCardExpanded when clicked to either expand or shrink*/}
+        <Button
+          title="More Info"
+          color={'#69c8ff'}
+          onPress={() => setIsCardExpanded(!isCardExpanded)}
+        />
+        {/* Additional information displayed when the card is expanded */}
+      </View>
+    );
+  };
 
 
 
@@ -191,7 +203,7 @@ const renderCarouselItem = ({ item }) => {
         initialRegion={sanmarcos}
         ref={mapRef}
         mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
-        //types = standard, satellite, hybrid, terrain, mutedStandard
+      //types = standard, satellite, hybrid, terrain, mutedStandard
       >
         {combinedData.map((marker, index) => (
           <Marker
@@ -256,7 +268,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: 'center'
   },
-  heading:{
+  heading: {
     color: 'white',
     position: 'absolute',
     fontWeight: 'bold',
@@ -274,21 +286,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     left: '31%', // Position the button at the horizontal center of the cardContainer
   },
-  selectLot:{
+  selectLot: {
     color: 'red',
-    position:'abolute',
+    position: 'abolute',
     bottom: '0',
     backgroundColor: 'white',
   },
-  cardText:{
+  cardText: {
     color: 'white',
     fontSize: 16,
   },
-  freeSpacesValue:{
+  freeSpacesValue: {
     color: '#90EE90',
     fontSize: 16,
   },
-   expandedCard: {
+  expandedCard: {
     height: 300, // You can adjust the height as needed
   },
 
@@ -298,4 +310,4 @@ const styles = StyleSheet.create({
 
 
 
-export default MapScreen;
+export default ParkingMapScreen;

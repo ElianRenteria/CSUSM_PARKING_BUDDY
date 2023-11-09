@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 
 export const ColorSchemeContext = createContext({
   colorScheme: 'light',
-  setColorScheme: () => {},
+  setColorScheme: () => { },
 });
 
 export const ColorSchemeProvider = ({ children }) => {

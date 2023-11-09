@@ -1,5 +1,5 @@
-import React,{useContext} from 'react';
-import {Dimensions,View, Text, Image, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { Dimensions, View, Text, Image, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
 import { ColorSchemeContext } from './screens/ColorSchemeContext';
 
@@ -8,6 +8,9 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
   const { colorScheme } = useContext(ColorSchemeContext);
   const windowWidth = Dimensions.get('window').width;
   const styles = StyleSheet.create({
+    card: {
+
+    },
     cardContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -15,14 +18,13 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
       backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF',
       padding: 20,
       //width: windowWidth - 80,
-      margin: 10,
       borderRadius: 15, // Adjust the value as needed
       shadowColor: 'black',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 2,
       elevation: 3,
-  
+
     },
     textContainer: {
       flex: 1,
@@ -43,7 +45,7 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
     },
   });
   return (
-    <Card>
+    <Card style={styles.card}>
       <View style={styles.cardContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>

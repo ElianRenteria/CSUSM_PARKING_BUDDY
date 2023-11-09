@@ -1,12 +1,26 @@
-import React, { useState, useContext } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import NotificationHistory from '../NotificationHistory';
 import AnnouncementCard from '../AnnouncementCard';
 import { useColorScheme } from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 
-const NotificationsScreen = () => {
+const AnnouncementsScreen = ({ navigation }) => {
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Icon
+          onPress={() => alert('This is a button!')}
+          name="bell"
+          type="feather"
+          color="black"
+        />
+      ),
+    });
+  }, [navigation]);
+
   const { colorScheme } = useContext(ColorSchemeContext);
   const styles = StyleSheet.create({
     container: {
@@ -15,14 +29,18 @@ const NotificationsScreen = () => {
       backgroundColor: colorScheme === 'dark' ? '#282828' : 'white',
     },
     historyIcon: {
-      position: 'absolute',
-      top: 20, // Adjust as needed for your header
+      position: 'relative',
+      top: 0, // Adjust as needed for your header
       right: 20,
       zIndex: 10, // Make sure it floats above other components
     },
     cardContainer: {
       backgroundColor: colorScheme === 'dark' ? '#282828' : 'white',
     },
+    row: {
+      borderWidth: 0,
+      backgroundColor: 'blue'
+    }
   });
   /*const styles = StyleSheet.create({
     container: {
@@ -84,19 +102,20 @@ const NotificationsScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={toggleHistory} style={styles.historyIcon}>
-        <Icon name="bell" type="feather" color={colorScheme === 'dark' ? 'white' : '#282828'}/>
-      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={toggleHistory} style={styles.historyIcon}>
+        <Icon name="bell" type="feather" color={colorScheme === 'dark' ? 'white' : '#282828'} />
+      </TouchableOpacity> */}
 
 
       <ScrollView style={{ flex: 1, backgroundColor: 'transparent' }}>
         {announcements.map((announcement) => (
           <AnnouncementCard
+            style={styles.row}
             key={announcement.id}
             title={announcement.title}
             text={announcement.text}
             imageUrl={announcement.imageUrl}
-           />
+          />
         ))}
       </ScrollView>
 
@@ -111,4 +130,4 @@ const NotificationsScreen = () => {
 
 
 
-export default NotificationsScreen;
+export default AnnouncementsScreen;
