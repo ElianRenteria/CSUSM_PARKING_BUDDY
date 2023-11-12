@@ -21,9 +21,9 @@ const NotificationsScreen = () => {
       right: 20,
       zIndex: 10, // Make sure it floats above other components
     },
-    text: {
-      color: colorScheme === 'dark' ? 'white' : '#282828',
-  },
+    cardContainer: {
+      backgroundColor: colorScheme === 'dark' ? '#282828' : 'white',
+    },
   });
   /*const styles = StyleSheet.create({
     container: {
@@ -86,18 +86,18 @@ const NotificationsScreen = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={toggleHistory} style={styles.historyIcon}>
-        <Icon name="bell" type="feather" />
+        <Icon name="bell" type="feather" color={colorScheme === 'dark' ? 'white' : '#282828'}/>
       </TouchableOpacity>
 
 
-      <ScrollView style={styles.container}>
+      <ScrollView style={{ flex: 1, backgroundColor: 'transparent' }}>
         {announcements.map((announcement) => (
           <AnnouncementCard
             key={announcement.id}
             title={announcement.title}
             text={announcement.text}
             imageUrl={announcement.imageUrl}
-          />
+           />
         ))}
         <Table />
       </ScrollView>
