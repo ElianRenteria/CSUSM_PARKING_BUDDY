@@ -345,8 +345,6 @@ const styles = StyleSheet.create({
   },
    expandedCard: {
     height: 500, // You can adjust the height as needed
-
-
   },
   inputBox:{
     color: 'white',
@@ -359,6 +357,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     padding: 16,
   },
+  inputBox:{
+    color: 'white',
+    backgroundColor: 'white',
+  }
 
 
 });
