@@ -352,10 +352,6 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: 'white',
   },
-  buttonContainer: {
-    width: '80%', // Adjust the width as needed
-    marginBottom: 16,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
