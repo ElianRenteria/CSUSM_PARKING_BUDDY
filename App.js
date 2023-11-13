@@ -3,15 +3,14 @@ import { useState, useEffect, useRef, useContext} from 'react';
 import { Text, View, Button, Platform, StyleSheet,colorScheme, useColorScheme} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import NotificationsScreen from './screens/AnnouncementsScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
 import MapScreen from './screens/MapScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { ColorSchemeProvider } from './screens/ColorSchemeContext';
-import { ColorSchemeContext } from './screens/ColorSchemeContext';
-//import { background } from 'native-base/lib/typescript/theme/styled-system';
+ import { ColorSchemeProvider } from './screens/ColorSchemeContext';
+ import { ColorSchemeContext } from './screens/ColorSchemeContext';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +36,13 @@ async function getLocation() {
 }
 
 function App() {
-  const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
+  const [navBarRefresh, setNavBarRefresh] = useState(false);
+  //const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
 
+  useEffect(() => {
+    setNavBarRefresh(!navBarRefresh);
+    console.log('colorScheme: ', colorScheme);
+  }, [colorScheme]);
   
   const tabOptions = {
     screenOptions: {
@@ -47,24 +51,34 @@ function App() {
       },
     },
   };
+  // Define styles with different color values for light and dark mode
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colorScheme === 'dark' ? '#282828' : '#000000',
+    },
+    // Add more styles as needed
+  });
 
   return (
+    <ColorSchemeProvider>
     <NavigationContainer>
+      <ColorSchemeProvider>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarStyle: [
-              {backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF'}
+              {
+                backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF',
+              },
+              null
             ],
-            headerStyle: {
-              backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF', // Change the background color of the header
-            },
-            headerTintColor: colorScheme === 'dark' ? '#FFFFFF' : '#282828', // Change the text color of the header
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               const colorFocused = focused ? '#007AC3' : 'grey';
+  
               if (route.name === 'Announcements') {
                 iconName = 'announcement';
-                return <MaterialIcons name={iconName} size={24} color={colorFocused}/>;
+                return <MaterialIcons name={iconName} size={24} color={colorFocused} />;
               } else if (route.name === 'Preferences') {
                 iconName = 'account-cog-outline';
                 return <MaterialCommunityIcons name={iconName} size={24} color={colorFocused} />;
@@ -77,21 +91,18 @@ function App() {
           )}
           
         >
-           <Tab.Screen name="Announcements" component={NotificationsScreen} options={{
-              title: 'Announcements',
-              headerTintColor: colorScheme === 'dark' ? 'white' : 'black', // Add this line to set the color of the screen name
-            }}/>
+           <Tab.Screen name="Announcements" component={NotificationsScreen} onPress={() => useEffect()} />
         <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()} />
         <Tab.Screen name="Preferences">
           {() => <PreferencesScreen />}
         </Tab.Screen>
         </Tab.Navigator>
+      </ColorSchemeProvider>
     </NavigationContainer>
+    </ColorSchemeProvider>
   );
 }
 
 export default () => (
-  <ColorSchemeProvider>
     <App />
-  </ColorSchemeProvider>
 );

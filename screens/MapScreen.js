@@ -9,6 +9,9 @@ import {
   Dimensions,
   Button,
   Modal,
+  TextInput,
+  TouchableOpacity,
+  Animated,
 } from 'react-native';
 import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -18,6 +21,8 @@ import { useColorScheme} from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import Table from '../components/DataTable.js';
 
+
+//Coordinates for San Marcos
 const sanmarcos = {
   latitude: 33.1298,
   longitude: -117.1587,
@@ -25,6 +30,7 @@ const sanmarcos = {
   longitudeDelta: 0.0034,
 };
 
+//Coordinates for CSUSM lots
 const csusmCoord = {
   markers: [],
   coordinates: [
@@ -62,6 +68,8 @@ const toggleModal = () => {
   const [parkingData, setParkingData] = useState([]);
 
   const [isCardExpanded, setIsCardExpanded] = useState(false);
+
+
 
   const mapRef = useRef(null);
 
@@ -164,7 +172,8 @@ const onMarkerPressed = (location, index) => {
 
 const renderCarouselItem = ({ item }) => {
   return (
-    <View style={[styles.cardContainer, isCardExpanded ? styles.expandedCard : null]}>
+    <View style={[styles.shadowProp,styles.cardContainer]}>
+     
       <Text style={styles.cardTitle}>{item.name}</Text>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.cardText}>Free Spaces: </Text>
@@ -181,12 +190,12 @@ const renderCarouselItem = ({ item }) => {
         </View>
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
-      <Button
-      title = "More Info"
-      color={'#69c8ff'}
-      onPress={() => setIsCardExpanded(!isCardExpanded)}
-      />
-          {/* Additional information displayed when the card is expanded */}
+      <TouchableOpacity
+         style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
+         onPress={() => console.log("Lot: " + item.name )}
+      >
+        <Text style={styles.cardText}>Park</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -236,15 +245,15 @@ const renderCarouselItem = ({ item }) => {
         ))}
       </MapView>
       <Carousel
-        ref={(c) => (this._carousel = c)}
+         ref={(c) => (this._carousel = c)}
         data={combinedData}
         containerCustomStyle={styles.carousel}
         renderItem={renderCarouselItem}
-        sliderWidth={Dimensions.get('window').width}
-        itemWidth={300}
+        sliderWidth={Dimensions.get('window').width} // Set it to the width of your screen
+        itemWidth={376} // Set it to the width of a single card item
         removeClippedSubviews={false}
         onSnapToItem={(index) => onCarouselItemChange(index)}
-      />
+/>
     </View>
   );
 };
@@ -263,11 +272,19 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'white',
     height: 200,
-    width: 300,
+    width: 370,
     padding: 24,
     borderRadius: 24,
+  },
+  animatedContainer:{
+    position: 'absolute',
+    width: "100%",
+    height: 100,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'red',
   },
   cardImage: {
     height: 120,
@@ -278,12 +295,18 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 24,
   },
   cardTitle: {
-    color: 'white',
+    color: 'black',
     fontSize: 22,
     alignSelf: 'center'
   },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
   heading:{
-    color: 'white',
+    color: 'black',
     position: 'absolute',
     fontWeight: 'bold',
     top: '83.5%', // Position the heading at the vertical center of the cardContainer
@@ -296,9 +319,15 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', // Vertically align to the bottom
     alignItems: 'center', // Horizontally align to the center
     height: 40,
-    width: 100,
+    width: 300,
     borderRadius: 12,
-    left: '31%', // Position the button at the horizontal center of the cardContainer
+    left: '5%', // Position the button at the horizontal center of the cardContainer
+    paddingTop:10,
+    paddingBottom:10,
+    backgroundColor:'#00FF00',
+    borderRadius:100,
+    borderWidth: 1,
+    borderColor: '#fff'
   },
   selectLot:{
     color: 'red',
@@ -307,7 +336,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   cardText:{
-    color: 'white',
+    color: 'black',
     fontSize: 16,
   },
   freeSpacesValue:{
@@ -315,7 +344,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
    expandedCard: {
-    height: 300, // You can adjust the height as needed
+    height: 500, // You can adjust the height as needed
+
+
+  },
+  inputBox:{
+    color: 'white',
+    backgroundColor: 'white',
   },
   buttonContainer: {
     width: '80%', // Adjust the width as needed
