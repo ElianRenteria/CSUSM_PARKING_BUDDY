@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity, TextIput } from 'react-native';
 import { Icon } from 'react-native-elements';
 import NotificationHistory from '../NotificationHistory';
 import AnnouncementCard from '../AnnouncementCard';
