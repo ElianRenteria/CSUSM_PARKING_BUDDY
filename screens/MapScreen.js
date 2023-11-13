@@ -8,16 +8,15 @@ import {
   Platform,
   Dimensions,
   Button,
+  Modal,
 } from 'react-native';
 import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel'; //npm install --save react-native-snap-carousel
 import firebase from '../firebase/firebaseConfig';
-import { useColorScheme } from 'react-native';
+import { useColorScheme} from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
-
-
-
+import Table from '../components/DataTable.js';
 
 const sanmarcos = {
   latitude: 33.1298,
@@ -51,6 +50,13 @@ const csusmCoord = {
 };
 
 const MapScreen = () => {
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+const toggleModal = () => {
+  setModalVisible(!isModalVisible);
+};
+
   const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
@@ -192,6 +198,20 @@ const renderCarouselItem = ({ item }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <Button title="Listview" onPress={toggleModal}/>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalContainer}>
+          <Table />
+          <View>
+            <Button title="Close" onPress={toggleModal} />
+          </View>
+        </View>
+      </Modal>
       <MapView
         style={{ flex: 1 }}
         initialRegion={sanmarcos}
@@ -296,6 +316,17 @@ const styles = StyleSheet.create({
   },
    expandedCard: {
     height: 300, // You can adjust the height as needed
+  },
+  buttonContainer: {
+    width: '80%', // Adjust the width as needed
+    marginBottom: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 16,
   },
 
 

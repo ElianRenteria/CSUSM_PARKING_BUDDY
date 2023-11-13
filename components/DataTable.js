@@ -12,21 +12,42 @@ OccupancyPS1Max = 1419;
 
 // Reference to the "Parking Spaces" collection
 const parkingRef = firebase.firestore().collection('Parking Structure');
-//determine the color for the table row
 
+//determine the color for the table row
 colorPick = (OccCurrent, OccMax) => {  
   
-  if ((OccCurrent/OccMax) <= 0.33){
-    return "green"
+  if ((OccCurrent/OccMax) <= 0.1){
+    return "#00ee00"
   }
-  else if ((OccCurrent/OccMax) <= 0.66){
-    return "orange"
+  else if ((OccCurrent/OccMax) <= 0.2){
+    return "#00dd00"
+  }
+  else if ((OccCurrent/OccMax) <= 0.3){
+    return "#00bb00"
+  }
+  else if ((OccCurrent/OccMax) <= 0.4){
+    return "#ddb900"
+  }
+  else if ((OccCurrent/OccMax) <= 0.5){
+    return "#ff9e01"
+  }
+  else if ((OccCurrent/OccMax) <= 0.6){
+    return "#ff8201"
+  }
+  else if ((OccCurrent/OccMax) <= 0.7){
+    return "#ff6501"
+  }
+  else if ((OccCurrent/OccMax) <= 0.8){
+    return "#ff4f01"
+  }
+  else if ((OccCurrent/OccMax) <= 0.9){
+    return "#ff3301"
   }
   else if ((OccCurrent/OccMax) <= 1){
-    return "red"
+    return "#ac0000"
   }
   else {
-    return "green"
+    return "#00ff00"
   }
 }
 
@@ -125,9 +146,10 @@ const styles = StyleSheet.create({
     padding: 15,     
   }, 
   tableHeader: { 
-    backgroundColor: '#DCDCDC', 
+    backgroundColor: '#CBCBCB', 
   }, 
   row : {
     padding: 5,
+    backgroundColor: '#DCDCDC',
   },
 });
