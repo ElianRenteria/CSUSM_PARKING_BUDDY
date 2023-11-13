@@ -8,6 +8,7 @@ import {
   Platform,
   Dimensions,
   Button,
+  Modal,
   TextInput,
   TouchableOpacity,
   Animated,
@@ -16,8 +17,10 @@ import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel'; //npm install --save react-native-snap-carousel
 import firebase from '../firebase/firebaseConfig';
-import { useColorScheme } from 'react-native';
+import { useColorScheme} from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
+import Table from '../components/DataTable.js';
+
 
 //Coordinates for San Marcos
 const sanmarcos = {
@@ -53,6 +56,13 @@ const csusmCoord = {
 };
 
 const MapScreen = () => {
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+const toggleModal = () => {
+  setModalVisible(!isModalVisible);
+};
+
   const { colorScheme } = useContext(ColorSchemeContext);
   // Stores the parking data
   const [parkingData, setParkingData] = useState([]);
@@ -104,8 +114,13 @@ const MapScreen = () => {
       querySnapshot.forEach((doc) => {
         // Access the "Free Spaces" field
         const freeSpaces = doc.data().OccupationCurrent;
-        const totalSpaces = doc.data().TotalSpaces
-        data.push({ id: doc.id, freeSpaces, totalSpaces});
+        const totalSpaces = doc.data().TotalSpaces;
+        const motorcycles = doc.data().Motorcycle;
+        const disabledSpaces = doc.data().Disabled;
+        const payStation = doc.data().Paystation;
+        const faculty = doc.data().Faculty_Staff;
+
+        data.push({ id: doc.id, freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty});
       });
       // Set the retrieved data in the state
       setParkingData(data);
@@ -168,9 +183,10 @@ const renderCarouselItem = ({ item }) => {
       {/*When the card is expanded, add more info*/}
       {isCardExpanded && (
         <View>
-          <Text style = {styles.cardText}>Additional Information:</Text>
-          <Text style = {styles.cardText}>More details about the parking lot can be shown here.</Text>
-          <Text style = {styles.cardText}>Include any other relevant information you want to display.</Text>
+          <Text style = {styles.cardText}>Total disabled parking spots: {item.disabledSpaces ? item.disabledSpaces : 0} </Text>
+          <Text style = {styles.cardText}>Total motorcycle parking spots: {item.motorcycles ? item.motorcycles : 0 }</Text>
+          <Text style = {styles.cardText}>Total parking spots exclusively for faculty/staff: {item.faculty ? item.faculty : 0 }</Text>
+          <Text style = {styles.cardText}>Is there a paystation: {item.payStation ? 'Yes' : 'No'}</Text>
         </View>
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
@@ -191,6 +207,20 @@ const renderCarouselItem = ({ item }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <Button title="Listview" onPress={toggleModal}/>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalContainer}>
+          <Table />
+          <View>
+            <Button title="Close" onPress={toggleModal} />
+          </View>
+        </View>
+      </Modal>
       <MapView
         style={{ flex: 1 }}
         initialRegion={sanmarcos}
@@ -315,8 +345,17 @@ const styles = StyleSheet.create({
   },
    expandedCard: {
     height: 500, // You can adjust the height as needed
-
-
+  },
+  inputBox:{
+    color: 'white',
+    backgroundColor: 'white',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 16,
   },
   inputBox:{
     color: 'white',
