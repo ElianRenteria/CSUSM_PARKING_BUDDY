@@ -22,6 +22,41 @@ import { ColorSchemeContext } from './ColorSchemeContext';
 import Table from '../components/DataTable.js';
 
 
+
+updateFirebasePark = (Lot) => {
+
+  const databaseRef = firebase.firestore().collection('Parking Structure');
+
+  databaseRef.doc(Lot).get()
+  .then(doc => {
+    const currentValue = doc.data().OccupationCurrent; //Get the current value so you can change it
+    // Add 1 to the current value and update it in Firebase
+    databaseRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
+  })
+  .catch(error => {
+    console.error('This is the error while fetching:', error);
+  });
+
+}
+
+updateFirebaseLeave = (Lot) => {
+
+  const databaseRef = firebase.firestore().collection('Parking Structure');
+
+  databaseRef.doc(Lot).get()
+  .then(doc => {
+    const currentValue = doc.data().OccupationCurrent; //Get the current value so you can change it
+    // Add 1 to the current value and update it in Firebase
+    databaseRef.doc(Lot).update({ OccupationCurrent: currentValue - 1 });
+  })
+  .catch(error => {
+    console.error('This is the error while fetching:', error);
+  });
+
+}
+
+
+
 //Coordinates for San Marcos
 const sanmarcos = {
   latitude: 33.1298,
@@ -192,9 +227,14 @@ const renderCarouselItem = ({ item }) => {
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
       <TouchableOpacity
          style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
-         onPress={() => console.log("Current Lot: " + item.name )}
+         onPress={() => updateFirebasePark(item.name)}
       >
         <Text style={styles.cardText}>Park</Text>
+      </TouchableOpacity><TouchableOpacity
+         style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
+         onPress={() => updateFirebaseLeave(item.name)}
+      >
+        <Text style={styles.cardText}>Leave</Text>
       </TouchableOpacity>
     </View>
   );
