@@ -192,7 +192,7 @@ const renderCarouselItem = ({ item }) => {
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
       <TouchableOpacity
          style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
-         onPress={() => console.log("Lot: " + item.name )}
+         onPress={() => console.log("Current Lot: " + item.name )}
       >
         <Text style={styles.cardText}>Park</Text>
       </TouchableOpacity>
