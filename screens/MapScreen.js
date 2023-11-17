@@ -92,9 +92,12 @@ const csusmCoord = {
 
 const MapScreen = () => {
 
+  const [buttonText, setButtonText] = useState('Park');
+
+
   const [isModalVisible, setModalVisible] = useState(false);
 
-const toggleModal = () => {
+  const toggleModal = () => {
   setModalVisible(!isModalVisible);
 };
 
@@ -226,16 +229,20 @@ const renderCarouselItem = ({ item }) => {
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
       <TouchableOpacity
-         style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
-         onPress={() => updateFirebasePark(item.name)}
+        style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
+        onPress={() => {
+            if (buttonText === 'Park') {
+              updateFirebasePark(item.name);
+              setButtonText('Leave');
+            } else {
+              updateFirebaseLeave(item.name);
+              setButtonText('Park');
+            }
+        }}
       >
-        <Text style={styles.cardText}>Park</Text>
-      </TouchableOpacity><TouchableOpacity
-         style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
-         onPress={() => updateFirebaseLeave(item.name)}
-      >
-        <Text style={styles.cardText}>Leave</Text>
+        <Text style={styles.cardText}>{buttonText}</Text>
       </TouchableOpacity>
+
     </View>
   );
 };
