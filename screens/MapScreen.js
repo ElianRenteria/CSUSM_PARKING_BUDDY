@@ -151,7 +151,7 @@ const MapScreen = () => {
       const data = [];
       querySnapshot.forEach((doc) => {
         // Access the "Free Spaces" field
-        const freeSpaces = doc.data().OccupationCurrent;
+        const freeSpaces = doc.data().TotalSpaces - doc.data().OccupationCurrent;
         const totalSpaces = doc.data().TotalSpaces;
         const motorcycles = doc.data().Motorcycle;
         const disabledSpaces = doc.data().Disabled;
@@ -233,7 +233,7 @@ const renderCarouselItem = ({ item }) => {
         onPress={() => {
             if (buttonText === 'Park') {
               updateFirebasePark(item.name);
-              setButtonText('Leave');
+              setButtonText('Leave');              
             } else {
               updateFirebaseLeave(item.name);
               setButtonText('Park');
