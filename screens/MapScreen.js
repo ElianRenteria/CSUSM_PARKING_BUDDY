@@ -21,42 +21,6 @@ import { useColorScheme} from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import Table from '../components/DataTable.js';
 
-
-
-updateFirebasePark = (Lot) => {
-
-  const databaseRef = firebase.firestore().collection('Parking Structure');
-
-  databaseRef.doc(Lot).get()
-  .then(doc => {
-    const currentValue = doc.data().OccupationCurrent; //Get the current value so you can change it
-    // Add 1 to the current value and update it in Firebase
-    databaseRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
-  })
-  .catch(error => {
-    console.error('This is the error while fetching:', error);
-  });
-
-}
-
-updateFirebaseLeave = (Lot) => {
-
-  const databaseRef = firebase.firestore().collection('Parking Structure');
-
-  databaseRef.doc(Lot).get()
-  .then(doc => {
-    const currentValue = doc.data().OccupationCurrent; //Get the current value so you can change it
-    // Add 1 to the current value and update it in Firebase
-    databaseRef.doc(Lot).update({ OccupationCurrent: currentValue - 1 });
-  })
-  .catch(error => {
-    console.error('This is the error while fetching:', error);
-  });
-
-}
-
-
-
 //Coordinates for San Marcos
 const sanmarcos = {
   latitude: 33.1298,
@@ -91,6 +55,52 @@ const csusmCoord = {
 };
 
 const MapScreen = () => {
+
+  const updateFirebasePark = async (Lot) => {
+    const databaseRef = firebase.firestore().collection('Parking Structure');
+  
+    try {
+      const doc = await databaseRef.doc(Lot).get();
+      const currentValue = doc.data().OccupationCurrent;
+  
+      // Add 1 to the current value and update it in Firebase
+      await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
+  
+      // Update the state with the modified data
+      setParkingData((prevData) =>
+        prevData.map((item) =>
+          item.id === Lot
+            ? { ...item, freeSpaces: item.freeSpaces - 1, faculty: item.faculty}
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Error while updating Firebase:', error);
+    }
+  };
+  
+  const updateFirebaseLeave = async (Lot) => {
+    const databaseRef = firebase.firestore().collection('Parking Structure');
+  
+    try {
+      const doc = await databaseRef.doc(Lot).get();
+      const currentValue = doc.data().OccupationCurrent;
+  
+      // Subtract 1 from the current value and update it in Firebase
+      await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue - 1 });
+  
+      // Update the state with the modified data
+      setParkingData((prevData) =>
+        prevData.map((item) =>
+          item.id === Lot
+            ? { ...item, freeSpaces: item.freeSpaces + 1, faculty: item.faculty}
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Error while updating Firebase:', error);
+    }
+  };
 
   const [buttonText, setButtonText] = useState('Park');
 
