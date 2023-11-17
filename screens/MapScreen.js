@@ -41,7 +41,7 @@ const csusmCoord = {
     longitudeDelta: 0.002 },
     { name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,      
     longitudeDelta: 0.0035 },
-    { name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
+    { name: "Lot PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
     longitudeDelta: 0.00104},
     { name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,      
     longitudeDelta: 0.0009},
@@ -167,7 +167,7 @@ const MapScreen = () => {
         const disabledSpaces = doc.data().Disabled;
         const payStation = doc.data().Paystation;
         const faculty = doc.data().Faculty_Staff;
-
+       
         data.push({ id: doc.id, freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty});
       });
       // Set the retrieved data in the state
@@ -219,7 +219,7 @@ const onMarkerPressed = (location, index) => {
 };
 
 const renderCarouselItem = ({ item }) => {
-  return (
+    return (
     <View style={[styles.shadowProp,styles.cardContainer]}>
      
       <Text style={styles.cardTitle}>{item.name}</Text>
