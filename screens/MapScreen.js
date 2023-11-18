@@ -14,7 +14,6 @@ import {
   Animated,
 } from 'react-native';
 import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import * as Location from 'expo-location';
 import Carousel from 'react-native-snap-carousel'; //npm install --save react-native-snap-carousel
 import firebase from '../firebase/firebaseConfig';
@@ -103,54 +102,6 @@ const MapScreen = () => {
       console.error('Error while updating Firebase:', error);
     }
   };
-
-
-  const leaveAlert = (item) => {
-    Alert.alert(
-      'Are you sure you want to leave?',
-      '',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            if (buttonText === "Leave") {
-              updateFirebaseLeave(item.name);  // Corrected function call
-              setButtonText("Park");
-            }
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-  
-  //Alert function that passes data to update the database when user wants to park
-  const parkAlert = (item) => {
-    Alert.alert(
-      'Are you sure you want to park here?',
-      '',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            if (buttonText === "Park") {
-              updateFirebasePark(item.name);
-              setButtonText("Leave");
-            }
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
   
   const updateFirebaseLeave = async (Lot) => {
     const databaseRef = firebase.firestore().collection('Parking Structure');
@@ -173,6 +124,50 @@ const MapScreen = () => {
     } catch (error) {
       console.error('Error while updating Firebase:', error);
     }
+  };
+
+
+  const leaveAlert = (item) => {
+    Alert.alert(
+      'Are you sure you want to leave?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            updateFirebaseAndButton(item.name);  // Corrected function call
+             
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+  //Alert function that passes data to update the database when user wants to park
+  const parkAlert = (item) => {
+    Alert.alert(
+      'Are you sure you want to park here?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+              updateFirebaseAndButton(item.name);
+            
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const toggleModal = () => {
@@ -224,7 +219,7 @@ const MapScreen = () => {
     parkingRef.get().then((querySnapshot) => {
       const data = [];
       querySnapshot.forEach((doc) => {
-        // Define the data we want to pull from the database
+        // Access the "Free Spaces" field
         const freeSpaces = doc.data().TotalSpaces - doc.data().OccupationCurrent;
         const totalSpaces = doc.data().TotalSpaces;
         const motorcycles = doc.data().Motorcycle;
@@ -302,7 +297,6 @@ const renderCarouselItem = ({ item }) => {
         </View>
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
-
       <TouchableOpacity
         style={[
           styles.buttonContainer,
@@ -314,34 +308,30 @@ const renderCarouselItem = ({ item }) => {
             : { backgroundColor: '#00FF00' }, //This is the default state, if no button has been pressed
         ]}
         onPress={() => {
-<<<<<<< HEAD
-          if(buttonText == "Park"){
-            parkAlert(item);
-          }else{
-            leaveAlert(item);
-          }
-        }}   
-=======
           if (selectedCard === item.name) {
             //If the button on the parked card is pressed again
             setParkedButtonPressed(false); //Set that no button has been pressed i.e. user left parking lot
-            updateFirebaseAndButton(item.name);
-            
+            leaveAlert(item);            
           } else {
             //When a button is pressed for the first time
-            updateFirebaseAndButton(item.name);
+            parkAlert(item);
             setParkedButtonPressed(true); //Set that a button has been pressed i.e. user has parked
             setSelectedCard(item.name); //Set selectedCard to the one where the user is parking
           }
         }}
         disabled={parkedButtonPressed && selectedCard !== item.name} //Disable all buttons except for the "parked" one
->>>>>>> e9ec4402dd1026d949387217b23b532369026d68
       >
         <Text style={styles.cardText}>{selectedCard === item.name ? 'Leave' : 'Park'}</Text>
       </TouchableOpacity>
+
     </View>
   );
 };
+
+
+
+
+  //console.log('Combined Data:', combinedData)
 
   return (
     <View style={{ flex: 1 }}>
@@ -359,47 +349,39 @@ const renderCarouselItem = ({ item }) => {
           </View>
         </View>
       </Modal>
-
-      <View style={{ flex: 1 }}>
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={sanmarcos}
-          ref={mapRef}
-          mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
-          //types = standard, satellite, hybrid, terrain, mutedStandard
-        >
-          {combinedData.map((marker, index) => (
-            <Marker
-              key={marker.name}
-              ref={(ref) => (csusmCoord.markers[index] = ref)}
-              onPress={() => onMarkerPressed(marker, index)}
-              coordinate={{
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-              }}
-            >
-              <Callout>
-                <Text>{marker.name}</Text>
-              </Callout>
-            </Marker>
-          ))}
-        </MapView>
-      </View>
-
-
-        <View>
-          <Carousel
-            ref={(c) => (this._carousel = c)}
-            data={combinedData}
-            containerCustomStyle={styles.carousel}
-            renderItem={renderCarouselItem}
-            sliderWidth={Dimensions.get('window').width} // Set it to the width of your screen
-            itemWidth={376} // Set it to the width of a single card item
-            removeClippedSubviews={false}
-            onSnapToItem={(index) => onCarouselItemChange(index)}
-          />
-        </View>
-
+      <MapView
+        style={{ flex: 1 }}
+        initialRegion={sanmarcos}
+        ref={mapRef}
+        mapType={colorScheme === 'dark' ? 'mutedStandard' : 'standard'}
+        //types = standard, satellite, hybrid, terrain, mutedStandard
+      >
+        {combinedData.map((marker, index) => (
+          <Marker
+            key={marker.name}
+            ref={(ref) => (csusmCoord.markers[index] = ref)}
+            onPress={() => onMarkerPressed(marker, index)}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
+          >
+            <Callout>
+              <Text>{marker.name}</Text>
+            </Callout>
+          </Marker>
+        ))}
+      </MapView>
+      <Carousel
+         ref={(c) => (this._carousel = c)}
+        data={combinedData}
+        containerCustomStyle={styles.carousel}
+        renderItem={renderCarouselItem}
+        sliderWidth={Dimensions.get('window').width} // Set it to the width of your screen
+        itemWidth={376} // Set it to the width of a single card item
+        removeClippedSubviews={false}
+        onSnapToItem={(index) => onCarouselItemChange(index)}
+/>
     </View>
   );
 };
