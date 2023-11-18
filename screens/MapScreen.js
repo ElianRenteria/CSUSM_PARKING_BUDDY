@@ -56,6 +56,30 @@ const csusmCoord = {
 
 const MapScreen = () => {
 
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [parkingData, setParkingData] = useState([]); // Stores the parking data
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
+  const [parkedButtonPressed, setParkedButtonPressed] = useState(false);
+
+  const updateFirebaseAndButton = async (lotName) => {
+    if (selectedCard === null) {
+      //No card is yet selected i.e someone has just parked, update Firebase and set the selected card 
+      updateFirebasePark(lotName);
+      setSelectedCard(lotName);
+    } else {
+      //User is already parked, so selectedCard is set to a lot
+      if (selectedCard === lotName) {
+        //The user pressed the leave button on the card that is set in selectedCard
+        updateFirebaseLeave(lotName);
+        setSelectedCard(null); //Reset the selected Card so that the user could select another one
+      } else {
+        //If for some reason the button on a card was pressed, while the user already selected to park in a different lot
+        console.log("You cannot park in multiple lots simultaneously");
+      }
+    }
+  };
+
   const updateFirebasePark = async (Lot) => {
     const databaseRef = firebase.firestore().collection('Parking Structure');
   
@@ -66,7 +90,7 @@ const MapScreen = () => {
       // Add 1 to the current value and update it in Firebase
       await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
   
-      // Update the state with the modified data
+      // Update the state with the modified data, so that the card can display it
       setParkingData((prevData) =>
         prevData.map((item) =>
           item.id === Lot
@@ -89,7 +113,7 @@ const MapScreen = () => {
       // Subtract 1 from the current value and update it in Firebase
       await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue - 1 });
   
-      // Update the state with the modified data
+      // Update the state with the modified data, so that the card can display it
       setParkingData((prevData) =>
         prevData.map((item) =>
           item.id === Lot
@@ -102,30 +126,21 @@ const MapScreen = () => {
     }
   };
 
-  const [buttonText, setButtonText] = useState('Park');
-
-
-  const [isModalVisible, setModalVisible] = useState(false);
-
   const toggleModal = () => {
   setModalVisible(!isModalVisible);
 };
 
   const { colorScheme } = useContext(ColorSchemeContext);
-  // Stores the parking data
-  const [parkingData, setParkingData] = useState([]);
-
-  const [isCardExpanded, setIsCardExpanded] = useState(false);
-
-
-
+  
   const mapRef = useRef(null);
 
 
   //Function to find parking info based on document id. Returns parkingData
   const findParkingDataById = (documentId) => {
-    const parkingDataItem = parkingData.find((item) => item.id === documentId);
-    return parkingDataItem || {};
+    //set some hardcoded values, so that if Firebase returns undefined the value will be 0 instead
+    const { freeSpaces = 0, totalSpaces = 0, motorcycles = 0, disabledSpaces = 0, payStation = false, faculty = 0 } =
+      parkingData.find((item) => item.id === documentId) || {};
+    return { freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty };
   };
 
   useEffect(() => {
@@ -213,7 +228,7 @@ const onMarkerPressed = (location, index) => {
       longitude: location.longitude,
       
     });
-
+    
     this._carousel.snapToItem(index);
   }
 };
@@ -239,18 +254,31 @@ const renderCarouselItem = ({ item }) => {
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
       <TouchableOpacity
-        style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
+        style={[
+          styles.buttonContainer,
+          isCardExpanded && { backgroundColor: 'red' },
+          selectedCard === item.name 
+            ? { backgroundColor: 'green' } //If a button is pressed, the button turns green
+            : parkedButtonPressed
+            ? { backgroundColor: 'grey' } //If a button is pressed, all other buttons are grey
+            : { backgroundColor: '#00FF00' }, //This is the default state, if no button has been pressed
+        ]}
         onPress={() => {
-            if (buttonText === 'Park') {
-              updateFirebasePark(item.name);
-              setButtonText('Leave');              
-            } else {
-              updateFirebaseLeave(item.name);
-              setButtonText('Park');
-            }
+          if (selectedCard === item.name) {
+            //If the button on the parked card is pressed again
+            setParkedButtonPressed(false); //Set that no button has been pressed i.e. user left parking lot
+            updateFirebaseAndButton(item.name);
+            
+          } else {
+            //When a button is pressed for the first time
+            updateFirebaseAndButton(item.name);
+            setParkedButtonPressed(true); //Set that a button has been pressed i.e. user has parked
+            setSelectedCard(item.name); //Set selectedCard to the one where the user is parking
+          }
         }}
+        disabled={parkedButtonPressed && selectedCard !== item.name} //Disable all buttons except for the "parked" one
       >
-        <Text style={styles.cardText}>{buttonText}</Text>
+        <Text style={styles.cardText}>{selectedCard === item.name ? 'Leave' : 'Park'}</Text>
       </TouchableOpacity>
 
     </View>
