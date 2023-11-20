@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Switch, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ColorSchemeProvider } from './ColorSchemeContext';
 
 
 
@@ -33,10 +34,7 @@ const PreferencesScreen = () => {
   });
 
 
-  useEffect(() => {
-    const newColorScheme = isToggled ? 'dark' : 'light';
-    setColorScheme(newColorScheme);
-  }, [isToggled, setColorScheme]);
+
 
 
   return (

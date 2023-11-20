@@ -21,7 +21,6 @@ import { useColorScheme} from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import Table from '../components/DataTable.js';
 
-
 //Coordinates for San Marcos
 const sanmarcos = {
   latitude: 33.1298,
@@ -42,7 +41,7 @@ const csusmCoord = {
     longitudeDelta: 0.002 },
     { name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,      
     longitudeDelta: 0.0035 },
-    { name: "PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
+    { name: "Lot PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,      
     longitudeDelta: 0.00104},
     { name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,      
     longitudeDelta: 0.0009},
@@ -58,26 +57,134 @@ const csusmCoord = {
 const MapScreen = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [parkingData, setParkingData] = useState([]); // Stores the parking data
+  const [isCardExpanded, setIsCardExpanded] = useState(false);
+  const [parkedButtonPressed, setParkedButtonPressed] = useState(false);
 
-const toggleModal = () => {
+  const updateFirebaseAndButton = async (lotName) => {
+    if (selectedCard === null) {
+      //No card is yet selected i.e someone has just parked, update Firebase and set the selected card 
+      updateFirebasePark(lotName);
+      setSelectedCard(lotName);
+    } else {
+      //User is already parked, so selectedCard is set to a lot
+      if (selectedCard === lotName) {
+        //The user pressed the leave button on the card that is set in selectedCard
+        updateFirebaseLeave(lotName);
+        setSelectedCard(null); //Reset the selected Card so that the user could select another one
+      } else {
+        //If for some reason the button on a card was pressed, while the user already selected to park in a different lot
+        console.log("You cannot park in multiple lots simultaneously");
+      }
+    }
+  };
+
+  const updateFirebasePark = async (Lot) => {
+    const databaseRef = firebase.firestore().collection('Parking Structure');
+  
+    try {
+      const doc = await databaseRef.doc(Lot).get();
+      const currentValue = doc.data().OccupationCurrent;
+  
+      // Add 1 to the current value and update it in Firebase
+      await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue + 1 });
+  
+      // Update the state with the modified data, so that the card can display it
+      setParkingData((prevData) =>
+        prevData.map((item) =>
+          item.id === Lot
+            ? { ...item, freeSpaces: item.freeSpaces - 1, faculty: item.faculty}
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Error while updating Firebase:', error);
+    }
+  };
+  
+  const updateFirebaseLeave = async (Lot) => {
+    const databaseRef = firebase.firestore().collection('Parking Structure');
+  
+    try {
+      const doc = await databaseRef.doc(Lot).get();
+      const currentValue = doc.data().OccupationCurrent;
+  
+      // Subtract 1 from the current value and update it in Firebase
+      await databaseRef.doc(Lot).update({ OccupationCurrent: currentValue - 1 });
+  
+      // Update the state with the modified data, so that the card can display it
+      setParkingData((prevData) =>
+        prevData.map((item) =>
+          item.id === Lot
+            ? { ...item, freeSpaces: item.freeSpaces + 1, faculty: item.faculty}
+            : item
+        )
+      );
+    } catch (error) {
+      console.error('Error while updating Firebase:', error);
+    }
+  };
+
+
+  const leaveAlert = (item) => {
+    Alert.alert(
+      'Are you sure you want to leave?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            updateFirebaseAndButton(item.name);  // Corrected function call
+             
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+  //Alert function that passes data to update the database when user wants to park
+  const parkAlert = (item) => {
+    Alert.alert(
+      'Are you sure you want to park here?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+              updateFirebaseAndButton(item.name);
+            
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const toggleModal = () => {
   setModalVisible(!isModalVisible);
 };
 
   const { colorScheme } = useContext(ColorSchemeContext);
-  // Stores the parking data
-  const [parkingData, setParkingData] = useState([]);
-
-  const [isCardExpanded, setIsCardExpanded] = useState(false);
-
-
-
+  
   const mapRef = useRef(null);
 
 
   //Function to find parking info based on document id. Returns parkingData
   const findParkingDataById = (documentId) => {
-    const parkingDataItem = parkingData.find((item) => item.id === documentId);
-    return parkingDataItem || {};
+    //set some hardcoded values, so that if Firebase returns undefined the value will be 0 instead
+    const { freeSpaces = 0, totalSpaces = 0, motorcycles = 0, disabledSpaces = 0, payStation = false, faculty = 0 } =
+      parkingData.find((item) => item.id === documentId) || {};
+    return { freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty };
   };
 
   useEffect(() => {
@@ -113,13 +220,13 @@ const toggleModal = () => {
       const data = [];
       querySnapshot.forEach((doc) => {
         // Access the "Free Spaces" field
-        const freeSpaces = doc.data().OccupationCurrent;
+        const freeSpaces = doc.data().TotalSpaces - doc.data().OccupationCurrent;
         const totalSpaces = doc.data().TotalSpaces;
         const motorcycles = doc.data().Motorcycle;
         const disabledSpaces = doc.data().Disabled;
         const payStation = doc.data().Paystation;
         const faculty = doc.data().Faculty_Staff;
-
+       
         data.push({ id: doc.id, freeSpaces, totalSpaces, motorcycles, disabledSpaces, payStation, faculty});
       });
       // Set the retrieved data in the state
@@ -165,13 +272,13 @@ const onMarkerPressed = (location, index) => {
       longitude: location.longitude,
       
     });
-
+    
     this._carousel.snapToItem(index);
   }
 };
 
 const renderCarouselItem = ({ item }) => {
-  return (
+    return (
     <View style={[styles.shadowProp,styles.cardContainer]}>
      
       <Text style={styles.cardTitle}>{item.name}</Text>
@@ -191,11 +298,32 @@ const renderCarouselItem = ({ item }) => {
       )}
       {/*Set isCardExpanded when clicked to either expand or shrink*/}
       <TouchableOpacity
-         style={[styles.buttonContainer, isCardExpanded && { backgroundColor: 'red' }]}
-         onPress={() => console.log("Lot: " + item.name )}
+        style={[
+          styles.buttonContainer,
+          isCardExpanded && { backgroundColor: 'red' },
+          selectedCard === item.name 
+            ? { backgroundColor: 'green' } //If a button is pressed, the button turns green
+            : parkedButtonPressed
+            ? { backgroundColor: 'grey' } //If a button is pressed, all other buttons are grey
+            : { backgroundColor: '#00FF00' }, //This is the default state, if no button has been pressed
+        ]}
+        onPress={() => {
+          if (selectedCard === item.name) {
+            //If the button on the parked card is pressed again
+            setParkedButtonPressed(false); //Set that no button has been pressed i.e. user left parking lot
+            leaveAlert(item);            
+          } else {
+            //When a button is pressed for the first time
+            parkAlert(item);
+            setParkedButtonPressed(true); //Set that a button has been pressed i.e. user has parked
+            setSelectedCard(item.name); //Set selectedCard to the one where the user is parking
+          }
+        }}
+        disabled={parkedButtonPressed && selectedCard !== item.name} //Disable all buttons except for the "parked" one
       >
-        <Text style={styles.cardText}>Park</Text>
+        <Text style={styles.cardText}>{selectedCard === item.name ? 'Leave' : 'Park'}</Text>
       </TouchableOpacity>
+
     </View>
   );
 };
