@@ -189,7 +189,7 @@ const MapScreen = () => {
       '',
       [
         {
-          text: 'Cancel',
+          text: 'No',
           style: 'cancel',
           onPress: () => {
             setParkedButtonPressed(true);
@@ -197,7 +197,7 @@ const MapScreen = () => {
           },
         },
         {
-          text: 'OK',
+          text: 'Yes',
           onPress: () => {
             updateFirebaseAndButton(item.name);  // Corrected function call
 
@@ -215,7 +215,7 @@ const MapScreen = () => {
       '',
       [
         {
-          text: 'Cancel',
+          text: 'No',
           style: 'cancel',
           onPress: () => {
             setParkedButtonPressed(false); 
@@ -224,7 +224,7 @@ const MapScreen = () => {
           },
         },
         {
-          text: 'OK',
+          text: 'Yes',
           onPress: () => {
             updateFirebaseAndButton(item.name);
 
