@@ -191,6 +191,10 @@ const MapScreen = () => {
         {
           text: 'Cancel',
           style: 'cancel',
+          onPress: () => {
+            setParkedButtonPressed(true);
+
+          },
         },
         {
           text: 'OK',
@@ -213,6 +217,11 @@ const MapScreen = () => {
         {
           text: 'Cancel',
           style: 'cancel',
+          onPress: () => {
+            setParkedButtonPressed(false); 
+            setSelectedCard(null);
+
+          },
         },
         {
           text: 'OK',
