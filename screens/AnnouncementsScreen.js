@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, TextIput } from 'react-native';
 import { Icon } from 'react-native-elements';
-import NotificationHistory from '../NotificationHistory';
-import AnnouncementCard from '../AnnouncementCard';
+import NotificationHistory from '../components/NotificationHistory';
+import AnnouncementCard from '../components/AnnouncementCard';
 import { useColorScheme } from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 

@@ -1,7 +1,7 @@
 import React,{useContext} from 'react';
 import {Dimensions,View, Text, Image, StyleSheet } from 'react-native';
 import { Card } from 'react-native-elements';
-import { ColorSchemeContext } from './screens/ColorSchemeContext';
+import { ColorSchemeContext } from '../screens/ColorSchemeContext';
 
 
 const AnnouncementCard = ({ title, text, imageUrl }) => {
