@@ -9,8 +9,8 @@ import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { ColorSchemeProvider } from './screens/ColorSchemeContext';
-import { ColorSchemeContext } from './screens/ColorSchemeContext';
+import { ColorSchemeProvider } from './Themes/ColorSchemeContext';
+import { ColorSchemeContext } from './Themes/ColorSchemeContext';
 //import { background } from 'native-base/lib/typescript/theme/styled-system';
 
 const Tab = createBottomTabNavigator();

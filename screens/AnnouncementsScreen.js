@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import NotificationHistory from '../components/NotificationHistory';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { useColorScheme } from 'react-native';
-import { ColorSchemeContext } from './ColorSchemeContext';
+import { ColorSchemeContext } from '../Themes/ColorSchemeContext';
 
 const NotificationsScreen = () => {
   const { colorScheme } = useContext(ColorSchemeContext);

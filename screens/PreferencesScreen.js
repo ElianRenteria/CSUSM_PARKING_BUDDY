@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, Switch, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ColorSchemeContext } from './ColorSchemeContext';
+import { ColorSchemeContext } from '../Themes/ColorSchemeContext';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ColorSchemeProvider } from './ColorSchemeContext';
+import { ColorSchemeProvider } from '../Themes/ColorSchemeContext';
 
 
 
