@@ -27,36 +27,37 @@ const csusmCoord = {
   coordinates: [
     {
       name: "Lot XYZ", latitude: 33.12898710963282, longitude: -117.16382034858764, latitudeDelta: 0.003,
-      longitudeDelta: 0.0024, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 360, height: 230,transform: [{ rotate: '-83deg' }]}
+      longitudeDelta: 0.0024, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 360, height: 230,transform: [{ rotate: '-83deg' }]}
     },
     {
       name: "Lot B", latitude: 33.126669821191214, longitude: -117.16304178645065, latitudeDelta: 0.0023,
-      longitudeDelta: 0.0019, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}
+      longitudeDelta: 0.0019, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}
     },
     {
       name: "Lot C", latitude: 33.12640540098678, longitude: -117.16106783721526, latitudeDelta: 0.0018,
-      longitudeDelta: 0.002, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}
+      longitudeDelta: 0.002, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}
     },
     {
       name: "Lot F", latitude: 33.12588302136077, longitude: -117.15709431991596, latitudeDelta: 0.0023,
-      longitudeDelta: 0.0035, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}
+      longitudeDelta: 0.0035, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}
     },
     {
       name: "Lot PS1", latitude: 33.13195683534602, longitude: -117.15745221928886, latitudeDelta: 0.0020,
-      longitudeDelta: 0.00104, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}
+      longitudeDelta: 0.00104, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}
     },
     {
       name: "Lot N", latitude: 33.132603715329026, longitude: -117.15648318361112, latitudeDelta: 0.002,
-      longitudeDelta: 0.0009, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}
+      longitudeDelta: 0.0009, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}
     },
-    { name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: .002, longitudeDelta: .001, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40} },
-    { name: "Lot K", latitude: 33.134066562234, longitude: -117.15528486384052 + .0001, latitudeDelta: .002, longitudeDelta: .0001, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40} },
-    { name: "Lot O", latitude: 33.13277732264146, longitude: -117.15819923081247 + .00001, latitudeDelta: .002, longitudeDelta: .0001, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}},
-    { name: "Lot L", latitude: 33.13225349810222, longitude: -117.15945690471221, latitudeDelta: .002, longitudeDelta: .00001, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}},
-    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta: .002, longitudeDelta: .00005, overlay: "../mapOverlay/images/Logo_barbie.png", size: {width: 40, height: 40}},
+    { name: "Lot J", latitude: 33.13347804216178, longitude: -117.15331481913803, latitudeDelta: .002, longitudeDelta: .001, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40} },
+    { name: "Lot K", latitude: 33.134066562234, longitude: -117.15528486384052 + .0001, latitudeDelta: .002, longitudeDelta: .0001, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40} },
+    { name: "Lot O", latitude: 33.13277732264146, longitude: -117.15819923081247 + .00001, latitudeDelta: .002, longitudeDelta: .0001, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}},
+    { name: "Lot L", latitude: 33.13225349810222, longitude: -117.15945690471221, latitudeDelta: .002, longitudeDelta: .00001, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}},
+    { name: "PS2", latitude: 33.13385152148427, longitude: -117.16092577290546, latitudeDelta: .002, longitudeDelta: .00005, overlay: require("../mapOverlay/images/Logo_barbie.png"), size: {width: 40, height: 40}},
 
   ],
 };
+
 
 
 
@@ -375,7 +376,7 @@ const MapScreen = () => {
 
         <Text style={styles.cardTitle}>{item.name}</Text>
         <View>
-          <Image source={isCurrentCardExpanded ?require("../mapOverlay/images/Logo_barbie.png"):""} style={isCurrentCardExpanded ?styles.mapOverlay:""}/>
+          {isCurrentCardExpanded && (<Image source={item.overlay} style={styles.mapOverlay} />)}
         </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.cardText}>Free Spaces: </Text>

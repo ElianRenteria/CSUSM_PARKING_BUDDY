@@ -143,7 +143,8 @@ export default Table;
   
 const styles = StyleSheet.create({ 
   container: { 
-    padding: 15,     
+    padding: 15,
+    borderRadius: 10,     
   }, 
   tableHeader: { 
     backgroundColor: '#CBCBCB', 
