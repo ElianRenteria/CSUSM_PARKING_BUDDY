@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NotificationsScreen from './screens/AnnouncementsScreen';
 import MapScreen from './screens/MapScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
+import LoginScreen from './screens/LoginScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -81,7 +82,8 @@ function App() {
               title: 'Announcements',
               headerTintColor: colorScheme === 'dark' ? 'white' : 'black', // Add this line to set the color of the screen name
             }}/>
-        <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()} />
+              <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()} />
+              <Tab.Screen name="Login Screen">{() => <LoginScreen />}</Tab.Screen>
         <Tab.Screen name="Preferences">
           {() => <PreferencesScreen />}
         </Tab.Screen>
