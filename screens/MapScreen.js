@@ -61,6 +61,7 @@ const csusmCoord = {
 
 
 
+
 const MapScreen = () => {
   //use banner to prompt user for access to machine for push notifications until they allow
   const [showBanner, setShowBanner] = useState(true);
@@ -368,10 +369,14 @@ const MapScreen = () => {
       styles.cardContainer,
       {height : isCurrentCardExpanded ? 600 : 200},
     ];
+    //TODO Need To finisih impleneitn the final map thingy
     return (
       <View style={containerStyle}>
 
         <Text style={styles.cardTitle}>{item.name}</Text>
+        <View>
+          <Image source={isCurrentCardExpanded ?require("../mapOverlay/images/Logo_barbie.png"):""} style={isCurrentCardExpanded ?styles.mapOverlay:""}/>
+        </View>
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.cardText}>Free Spaces: </Text>
           <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
@@ -494,7 +499,7 @@ const MapScreen = () => {
       paddingBottom: 10,
       backgroundColor: '#00FF00',
       borderRadius: 100,
-      borderWidth: 1,
+      borderWidth: 0,
       borderColor: '#fff'
     },
     selectLot: {
@@ -519,11 +524,17 @@ const MapScreen = () => {
       padding: 16,
     },
     inputBox: {
-      color: 'white',
-      backgroundColor: 'white',
+      color: colorScheme === 'dark' ? '#282828':'white',
+      backgroundColor: colorScheme === 'dark' ? '#282828':'white',
     },
     button: {
         color: colorScheme === 'dark' ? 'white' : '#282828',
+    },
+    mapOverlay: {
+      height: 420,
+      width: 320,
+      backgroundColor: 'rgba(40, 40, 40, 0.6)',
+      borderRadius: 8,
     }
   
   
@@ -547,7 +558,7 @@ const MapScreen = () => {
         <View style={styles.modalContainer}>
           <Table />
           <View>
-            <Button style={styles.button} title="Close" onPress={toggleModal} />
+            <Button title="Close" onPress={toggleModal} titleColor="#FFFFFF" />
           </View>
         </View>
       </Modal>
