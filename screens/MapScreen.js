@@ -310,8 +310,14 @@ const onMarkerPressed = (location, index) => {
 
 const renderCarouselItem = ({ item }) => {
 
+  const containerStyle = [
+    styles.shadowProp,
+    styles.cardContainer,
+    {height : isCardExpanded ? 400 : 200},
+  ];
+
     return (
-    <Animated.View style={[styles.shadowProp,styles.cardContainer, { flex: 1, height: containerHeight }]}>
+    <View style={containerStyle}>
      
      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         {/* Lot Title */}
@@ -394,7 +400,7 @@ const renderCarouselItem = ({ item }) => {
         <Text >{selectedCard === item.name ? 'Leave' : 'Park'}</Text>
       </TouchableOpacity>
 
-    </Animated.View>
+    </View>
   );
 };
 
