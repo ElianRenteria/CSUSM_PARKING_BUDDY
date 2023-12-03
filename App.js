@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import NotificationsScreen from './screens/AnnouncementsScreen';
 import MapScreen from './screens/MapScreen';
+import LoginScreen from './screens/LoginScreen';
 import PreferencesScreen from './screens/PreferencesScreen';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -84,7 +85,10 @@ function App() {
         <Tab.Screen name="Parking Map" component={MapScreen} onPress={() => getLocation()} />
         <Tab.Screen name="Preferences">
           {() => <PreferencesScreen />}
-        </Tab.Screen>
+              </Tab.Screen>
+              <Tab.Screen name="Login">
+                  {() => <LoginScreen />}
+              </Tab.Screen>
         </Tab.Navigator>
     </NavigationContainer>
   );
