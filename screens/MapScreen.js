@@ -8,6 +8,9 @@ import { useColorScheme } from 'react-native';
 import { ColorSchemeContext } from './ColorSchemeContext';
 import Table from '../components/DataTable.js';
 import * as Notifications from 'expo-notifications';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Divider } from '@rneui/themed';
 
 
 //Coordinates for San Marcos
@@ -59,6 +62,16 @@ const csusmCoord = {
 const MapScreen = () => {
   //use banner to prompt user for access to machine for push notifications until they allow
   const [showBanner, setShowBanner] = useState(true);
+    //Values for dropdown picker
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [floors, setFloors] = useState([
+      {label: 'Floor 1', value: 'apple'},
+      {label: 'Floor 2', value: 'banana'},
+      {label: 'Floor 3', value: 'pear'},
+      {label: 'Floor 4', value: 'Lychee'},
+      {label: 'Floor 5', value: "Poop"},
+  ]);
 
   useEffect(() => {
     checkNotificationStatus();
@@ -342,26 +355,77 @@ const MapScreen = () => {
     }
   };
 
-  const renderCarouselItem = ({ item }) => {
-    return (
-      <View style={[styles.shadowProp, styles.cardContainer]}>
+    //Handles the card expanding when the button is pressed, uses animation to make the card slide up
+    const handlePress = () =>{
+      setIsCardExpanded(!isCardExpanded);
+    };
+  
+  
 
+  const renderCarouselItem = ({ item }) => {
+    const containerStyle = [
+      styles.shadowProp,
+      styles.cardContainer,
+      {height : isCardExpanded ? 400 : 200},
+    ];
+
+    return (
+      
+      <View style={containerStyle}>
+     
+     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Lot Title */}
         <Text style={styles.cardTitle}>{item.name}</Text>
+
+         {/*If item.name === Ps1 then execute stuff in parenthesis following ?, if not then execute stuff after null*/}
+         {item.name === "Lot PS1" ? (
+            <View style={{position: 'relative', height: 50,zIndex: 2, width: 150}}>
+              <DropDownPicker 
+                open={open}
+                value={value}
+                items={floors}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setFloors}
+                placeholder={'Choose a floor'}
+                style={{ zIndex: 1000 }}  
+              />
+            </View>
+            ): null}
+
+        {/* Expand Button */}
+        <TouchableOpacity onPress={handlePress}>
+          {/* If card is expanded, use chevron down, else do chevron up*/}
+          <Icon name={isCardExpanded ? 'chevron-down' : 'chevron-up'} size={24} />
+        </TouchableOpacity>
+      </View>
+
+      <Divider style = {styles.dividerLine} inset={true} insetType="right" />
+
+
+        {/*When the card is expanded, add more info under free spaces*/}
+        {isCardExpanded && (
+          <View>
+           <Text style={styles.subHeading}>Parking Features</Text>
+           <Text style = {styles.infoText}>Motorcycle Parking: {item.motorcycles}</Text>
+           <Text style = {styles.infoText}>Disabled Parking: {item.disabledSpaces}</Text>
+           <Text style = {styles.infoText}>Faculty Parking: {item.faculty}</Text>
+           <Text style = {styles.infoText}>Paystation: {item.Paystation}</Text>
+
+
+
+           <Divider style = {styles.dividerLine} inset={true} insetType="right" />
+
+         
+         </View> 
+      )}
+
+        
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.cardText}>Free Spaces: </Text>
           <Text style={styles.freeSpacesValue}>{item.freeSpaces}</Text>
         </View>
         <Text style={styles.cardText}>Total Spaces: {item.totalSpaces}</Text>
-        {/*When the card is expanded, add more info*/}
-        {isCardExpanded && (
-          <View>
-            <Text style={styles.cardText}>Total disabled parking spots: {item.disabledSpaces ? item.disabledSpaces : 0} </Text>
-            <Text style={styles.cardText}>Total motorcycle parking spots: {item.motorcycles ? item.motorcycles : 0}</Text>
-            <Text style={styles.cardText}>Total parking spots exclusively for faculty/staff: {item.faculty ? item.faculty : 0}</Text>
-            <Text style={styles.cardText}>Is there a paystation: {item.payStation ? 'Yes' : 'No'}</Text>
-          </View>
-        )}
-        {/*Set isCardExpanded when clicked to either expand or shrink*/}
         <TouchableOpacity
           style={[
             styles.buttonContainer,
@@ -509,7 +573,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  heading: {
+  heading:{
     color: 'black',
     position: 'absolute',
     fontWeight: 'bold',
@@ -564,7 +628,17 @@ const styles = StyleSheet.create({
   inputBox: {
     color: 'white',
     backgroundColor: 'white',
-  }
+  },
+  dividerLine:{
+    marginTop:10,
+    marginBottom: 10,
+  },
+  infoText:{
+    color: 'gray',
+    position: 'relative',
+    fontSize: 12,
+    marginBottom: 5,
+  },
 
 
 });
