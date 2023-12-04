@@ -1,12 +1,10 @@
-import React,{useContext} from 'react';
-import {Dimensions,View, Text, Image, StyleSheet } from 'react-native';
-import { Card } from 'react-native-elements';
+import React, { useContext } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Card, Icon } from 'react-native-elements';
 import { ColorSchemeContext } from './screens/ColorSchemeContext';
 
-
-const AnnouncementCard = ({ title, text, imageUrl }) => {
+const AnnouncementCard = ({ id, title, text, imageUrl, onDelete }) => {
   const { colorScheme } = useContext(ColorSchemeContext);
-  const windowWidth = Dimensions.get('window').width;
   const styles = StyleSheet.create({
     cardContainer: {
       flexDirection: 'row',
@@ -14,18 +12,29 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
       alignItems: 'center',
       backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF',
       padding: 20,
-      //width: windowWidth - 80,
       margin: 10,
-      borderRadius: 15, // Adjust the value as needed
+      borderRadius: 15,
       shadowColor: 'black',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 2,
       elevation: 3,
-  
+    },
+    deleteButton: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      backgroundColor: 'red',
+      borderRadius: 15,
+      width: 30,
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1, // Ensure it's above other elements
     },
     textContainer: {
       flex: 1,
+      marginRight: 10, // Give space for the image
     },
     title: {
       fontSize: 18,
@@ -42,8 +51,13 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
       borderRadius: 10,
     },
   });
+
   return (
-    <Card>
+    // <Card>
+    <View>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
+        <Icon name="x" type="feather" color="#fff" />
+      </TouchableOpacity>
       <View style={styles.cardContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
@@ -53,10 +67,9 @@ const AnnouncementCard = ({ title, text, imageUrl }) => {
           <Image source={{ uri: imageUrl }} style={styles.image} />
         )}
       </View>
-    </Card>
+      {/* </Card> */}
+    </View>
   );
 };
-
-
 
 export default AnnouncementCard;
