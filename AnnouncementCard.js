@@ -10,7 +10,7 @@ const AnnouncementCard = ({ id, title, text, imageUrl, onDelete }) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: colorScheme === 'dark' ? '#282828' : '#FFFFFF',
+      backgroundColor: colorScheme === 'dark' ? 'white' : '#282828',
       padding: 20,
       margin: 10,
       borderRadius: 15,
@@ -38,12 +38,12 @@ const AnnouncementCard = ({ id, title, text, imageUrl, onDelete }) => {
     },
     title: {
       fontSize: 18,
-      color: colorScheme === 'dark' ? '#FFFFFF' : '#282828',
+      color: colorScheme === 'dark' ? '#282828' : 'white',
       fontWeight: 'bold',
     },
     text: {
       fontSize: 14,
-      color: colorScheme === 'dark' ? '#FFFFFF' : '#282828',
+      color: colorScheme === 'dark' ? '#282828' : 'white',
     },
     image: {
       width: 100,

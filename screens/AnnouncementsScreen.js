@@ -39,7 +39,7 @@ const NotificationsScreen = () => {
       borderRadius: 30,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#282828', // Adjust color as needed
+      backgroundColor: colorScheme === 'dark' ? 'white' : '#282828', // Adjust color as needed
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.25,
@@ -241,7 +241,7 @@ const NotificationsScreen = () => {
       />
 
       <TouchableOpacity onPress={() => setAddModalVisible(true)} style={styles.addButton}>
-        <Icon name="plus" type="feather" color="white" />
+        <Icon name="plus" type="feather" color={colorScheme === 'dark' ? '#282828' : 'white'} />
       </TouchableOpacity>
 
       <Modal
@@ -268,7 +268,7 @@ const NotificationsScreen = () => {
             placeholder="Description"
             multiline
           />
-          <TextInput
+          {/* <TextInput
             style={styles.input}
             onChangeText={(text) => setNewAnnouncement({ ...newAnnouncement, backgroundColor: text })}
             value={newAnnouncement.backgroundColor}
@@ -283,9 +283,9 @@ const NotificationsScreen = () => {
                 onPress={() => selectColor(color)}
               />
             ))}
-          </View>
+          </View> */}
 
-          <Button title="Create Announcement" onPress={handleAddAnnouncement} />
+          <Button title="Create Announcement" style={styles.submitButton} onPress={handleAddAnnouncement} />
         </View>
       </Modal>
     </View>

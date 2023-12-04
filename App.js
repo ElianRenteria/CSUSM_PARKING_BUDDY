@@ -72,6 +72,9 @@ function App() {
               } else if (route.name === 'Parking Map') {
                 iconName = 'map-o';
                 return <FontAwesome name={iconName} size={24} color={colorFocused} />;
+              } else if (route.name === 'Login') {
+                iconName = 'lock';
+                return <FontAwesome name={iconName} size={24} color={colorFocused} />;
               }
             },
           }
