@@ -53,7 +53,6 @@ const AnnouncementCard = ({ id, title, text, imageUrl, onDelete }) => {
   });
 
   return (
-    // <Card>
     <View>
       <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
         <Icon name="x" type="feather" color="#fff" />
@@ -67,7 +66,6 @@ const AnnouncementCard = ({ id, title, text, imageUrl, onDelete }) => {
           <Image source={{ uri: imageUrl }} style={styles.image} />
         )}
       </View>
-      {/* </Card> */}
     </View>
   );
 };

@@ -285,7 +285,7 @@ const NotificationsScreen = () => {
             ))}
           </View> */}
 
-          <Button title="Create Announcement" style={styles.submitButton} onPress={handleAddAnnouncement} />
+          <Button title="Create Announcement" onPress={handleAddAnnouncement} />
         </View>
       </Modal>
     </View>
