@@ -10,6 +10,8 @@ import { ColorSchemeProvider } from './ColorSchemeContext';
 const PreferencesScreen = () => {
   const { colorScheme, setColorScheme } = useContext(ColorSchemeContext);
   const [isToggled, setIsToggled] = useState(false);
+  const [cosmeticSwitch1, setCosmeticSwitch1] = useState(false);
+  const [cosmeticSwitch2, setCosmeticSwitch2] = useState(false);
 
   const toggleSwitch = () => {
     const newColorScheme = colorScheme === 'light' ? 'dark' : 'light';
@@ -30,6 +32,18 @@ const PreferencesScreen = () => {
     switchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    additionalSwitchContainer: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginVertical: 10,
+    },
+    additionalSwitch: {
+      marginLeft: 10,
+    },
+    switchLabel: {
+      marginLeft: 5,
+      color: colorScheme === 'dark' ? 'white' : '#282828',
     },
   });
 
@@ -57,6 +71,29 @@ const PreferencesScreen = () => {
         ) : (
           <MaterialCommunityIcons name="weather-night" size={24} color="black" />
         )}
+      </View>
+      <View style={styles.additionalSwitchContainer}>
+        <Text style={styles.text}>EV?</Text>
+        <View style={[styles.switchContainer, styles.additionalSwitch]}>
+          <Switch
+            onValueChange={() => setCosmeticSwitch1(!cosmeticSwitch1)}
+            value={cosmeticSwitch1}
+            thumbColor={'white'}
+            trackColor={{ false: 'red', true: 'green' }}
+          />
+        </View>
+      </View>
+
+      <View style={styles.additionalSwitchContainer}>
+        <Text style={styles.text}>Carpool?</Text>
+        <View style={[styles.switchContainer, styles.additionalSwitch]}>
+          <Switch
+            onValueChange={() => setCosmeticSwitch2(!cosmeticSwitch2)}
+            value={cosmeticSwitch2}
+            thumbColor={'white'}
+            trackColor={{ false: 'red', true: 'green' }}
+          />
+        </View>
       </View>
     </View>
   );
